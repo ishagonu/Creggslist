@@ -1,6 +1,7 @@
 import React from "react";
 import Login from './login.js';
 import Signup from './signup.js';
+import Image from './image.js'
 import Home from './home.js';
 import './App.css';
 import {Switch, Route, Link, Redirect} from 'react-router-dom';
@@ -17,6 +18,7 @@ export default class App extends React.Component {
           <Route path='/login' component={Login} />
           <Route path='/signup' component={Signup} />
           <Route path='/home' component={Home} />
+          <Route path='/image' component={Image} />
         </Switch>
       </div>
     )

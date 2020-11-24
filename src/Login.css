@@ -35,4 +35,10 @@
     font-family: Neucha;
     font-size: 35px;
   }
+
+  #link {
+    color: white;
+    font-weight: bolder;
+    text-decoration: underline;
+  }
 }

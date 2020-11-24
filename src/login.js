@@ -45,8 +45,7 @@ export default function Login() {
               </Link>
             </Form>
           </div>
-          {/* <p className='text'>Don't have an account? Click <Link to="/signup">here</Link> to sign in</p> */}
-          <p className='text'>Don't have an account? Click <Link to="/signup">here</Link> to sign in</p>
+          <p className='text'>Don't have an account? Click <Link to="/signup" id="link">here</Link> to sign in</p>
           <Switch>
             <Route path='/signup' component={Signup} />
           </Switch>

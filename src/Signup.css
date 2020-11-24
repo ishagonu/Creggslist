@@ -31,7 +31,27 @@
     text-align: center;
   }
 
+  .photo {
+    height: 150px;
+    width: 150px;
+  }
+
+  .picker {
+    flex-direction: row;
+    width: 400px;
+  }
+
   #title {
     font-size: 35px;
+  }
+
+  #choose {
+    font-size: 20px;
+    text-align: center;
+  }
+
+  #button-small {
+    margin-bottom: 7%;
+    margin-top: 7%;
   }
 }
