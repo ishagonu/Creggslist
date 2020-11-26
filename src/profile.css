@@ -1,0 +1,48 @@
+@media all {
+
+    #profileDisplay { /* Overall profile card, contaiing photo, info, and buttons */
+        margin: 3% 3% 1% 3%; /* top right bottom left */
+        width: 42%;
+    }
+
+    #profilePhoto { /* User's profile photo */
+        margin: 5%;
+        width: 85%;
+    }
+
+    #profileButton { /* Padding for individual edit/log out block button */
+        margin-top: 4%;
+        margin-bottom: 2%;
+    }
+
+    #profileButtons { /* UNUSED Alignment for horizontally spacing edit and log out buttons */
+        display: flex;
+        flex-direction: vertical;
+        justify-content: space-between;
+        margin-top: 2%;
+        /* background-color: red; for testing purposes*/
+    }
+
+    /*Text*/
+
+    .headerText { /* White header text */
+        font-family: Neucha;
+        color: white;
+        text-align: center;
+      }
+
+    .bodyText { /* White header text */
+        font-family: Neucha;
+        color: black;
+        text-align: left;
+    }
+    
+      #title {
+        font-family: Neucha;
+        font-size: 30px;
+      }
+
+    .buttonText { /* Button text for edit/logout buttons */
+        color: white;
+    }
+}
