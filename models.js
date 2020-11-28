@@ -49,7 +49,6 @@ const Accounts = sequelize.define(
         allowNull: false,
     },
     photo: DataTypes.STRING,
-    inSession: DataTypes.BOOLEAN,
     // password: DataTypes.STRING(20)
   },
   {

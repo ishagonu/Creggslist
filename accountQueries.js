@@ -24,7 +24,7 @@ const searchAccounts = async (req, res) => {
           text + '%',
         ),
       },
-      attributes: ['id', 'name', 'username', 'phone_number'],
+      attributes: ['id', 'name', 'username', 'phone_number', 'location'],
     })
     return res.status(200).json({ users })
   } catch (error) {
@@ -41,8 +41,7 @@ const createAccount = async (req, res) => {
       username: req.body.params.username,
       email: req.body.params.email,
       photo: req.body.params.photo,
-      inSession: false,
-      phone_number: req.body.params.phone_number,
+      location: req.body.params.location,
     })
     return res.status(201).send('Account created')
   } catch (error) {
