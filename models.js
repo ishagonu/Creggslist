@@ -2,16 +2,8 @@ const { Sequelize, DataTypes } = require('sequelize')
 
 // configuration for database
 const config = {
-  user: process.env.USERS_USER,
-  username: process.env.USERS_USER,
-  host: process.env.USERS_HOST,
-  password: process.env.USERS_PASSWORD,
-  port: process.env.USERS_PORT,
-  database: process.env.USERS_DATABASE,
+  host: 'localhost',
   dialect: 'postgresql',
-  ssl: {
-    rejectUnauthorized: false,
-  },
 }
 const sequelize = new Sequelize(config)
 const Accounts = sequelize.define(
@@ -72,7 +64,7 @@ const Posts = sequelize.define('posts', {
       allowNull: false
   },
   content: {
-    type: DataTypes.STRING(20),
+    type: DataTypes.STRING,
     allowNull: false,
   },
 })

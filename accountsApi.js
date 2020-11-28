@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const accountsApi = axios.create({
-  baseURL: 'https://wechews.herokuapp.com',
+  baseURL: 'localhost',
   //baseURL: 'http://192.168.0.23:5000'
 })
 
