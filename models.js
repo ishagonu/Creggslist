@@ -2,6 +2,11 @@ const { Sequelize, DataTypes } = require('sequelize')
 
 // configuration for database
 const config = {
+  user: process.env.USERS_USER,
+  username: process.env.USERS_USER,
+  password: process.env.USERS_PASSWORD,
+  port: process.env.USERS_PORT,
+  database: process.env.USERS_DATABASE,
   host: 'localhost',
   dialect: 'postgresql',
 }
@@ -71,8 +76,8 @@ const Posts = sequelize.define('posts', {
 
 Posts.belongsTo(Accounts, { foreignKey: 'author_id', foreignKeyConstraint: true })
 
-/*sequelize.sync({ force: true }).then(() => {
-  console.log('Friend model was synchronized successfully.')
-})*/
+sequelize.sync({ force: true }).then(() => {
+  console.log('Model was synchronized successfully.')
+})
 
 module.exports = { Accounts, Posts }
