@@ -25,6 +25,7 @@ export default function Make_Post(){
     const [price, setPrice] = React.useState(null);
     const [keywords, setKeywords] = React.useState('');
     const [email, setEmail] = React.useState('');
+    
     function imagePicked(){
 	return images.length > 0;
     }
@@ -106,7 +107,7 @@ export default function Make_Post(){
 				<div class='input-group-prepend'>
 				    <div class='input-group-text'>$</div>
 				</div>
-				<input type='text' id='price' class='form-control' placeholder= 'Price'
+				<input type='text' id='price' class='form-control' placeholder= 'Price*'
 				       value={price}
 				       onChange={(e) => setPrice(e.target.value)}
 				/>
