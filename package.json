@@ -15,7 +15,9 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.0",
     "reactjs-popup": "^2.0.4",
-    "web-vitals": "^0.2.4"
+    "web-vitals": "^0.2.4",
+    "pg": "^8.5.1",
+    "sequelize": "^6.3.5"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -40,9 +42,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "pg": "^8.5.1",
-    "sequelize": "^6.3.5"
   }
 }

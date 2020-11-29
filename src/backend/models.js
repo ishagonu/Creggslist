@@ -49,7 +49,7 @@ const Posts = sequelize.define('posts', {
     allowNull: false,
   },
   keywords: {
-    type: DataTypes.ARRAY(Sequelize.STRING)
+    type: DataTypes.ARRAY(DataTypes.STRING)
   },
   photos: {
     type: DataTypes.STRING
