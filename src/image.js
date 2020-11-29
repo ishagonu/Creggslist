@@ -38,8 +38,8 @@ export default function Image() {
             <h3>Choose a Profile Photo</h3>
             <div style={{marginLeft:margin, marginBottom:'3%'}}>
                 <ImagePicker 
-                images={imageList.map((image, i) => ({src: image, value: i}))}
-                onPick={(image) => onPick(image)}
+                    images={imageList.map((image, i) => ({src: image, value: i}))}
+                    onPick={(image) => onPick(image)}
                 />
             </div>
             <Button type="button" variant='light' onClick={() => console.log(image)}>Set</Button>
@@ -48,10 +48,10 @@ export default function Image() {
                     <Form.Group size="lg" controlId="email">
                         <Form.Label className='text'>Name: </Form.Label>
                         <Form.Control
-                        autoFocus
-                        type="name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
+                            autoFocus
+                            type="name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
                         />
                     </Form.Group>
                     <Link to='/image'>

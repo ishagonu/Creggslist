@@ -1,0 +1,10 @@
+@media all and (min-width:480px) {
+    html,
+    body,
+    body > div,
+    .app{
+	background-color: rgb(181, 194, 236);
+	justify-content : center;
+	alighn-content : center;
+    }
+    

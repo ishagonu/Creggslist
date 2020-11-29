@@ -4,7 +4,6 @@ import Signup from './signup.js';
 import Image from './image.js';
 import Home from './home.js';
 import Make_Post from './make-post.js';
-
 import './App.css';
 import {Switch, Route, Link, Redirect} from 'react-router-dom';
 
@@ -21,7 +20,7 @@ export default class App extends React.Component {
             <Route path='/signup' component={Signup} />
             <Route path='/home' component={Home} />
             <Route path='/image' component={Image} />
-	    <Route path='/make-post' component={Make_Post} />
+	    <Route path='/make-post' componenet={Make_Post} />
         </Switch>
       </div>
     )
