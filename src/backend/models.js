@@ -7,7 +7,7 @@ const config = {
   password: process.env.USERS_PASSWORD,
   port: process.env.USERS_PORT,
   database: process.env.USERS_DATABASE,
-  host: 'localhost',
+  host: process.env.USERS_HOST,
   dialect: 'postgresql',
   ssl: {
     rejectUnauthorized: false,
@@ -49,7 +49,7 @@ const Posts = sequelize.define('posts', {
     allowNull: false,
   },
   keywords: {
-    type: DataTypes.ARRAY(Sequelize.STRING)
+    type: DataTypes.ARRAY(DataTypes.STRING)
   },
   photos: {
     type: DataTypes.STRING
