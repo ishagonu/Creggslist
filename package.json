@@ -40,5 +40,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "pg": "^8.5.1",
+    "sequelize": "^6.3.5"
   }
 }
