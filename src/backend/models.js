@@ -26,6 +26,10 @@ const Accounts = sequelize.define(
         isEmail: true,
       },
     },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     photo: {
       type: DataTypes.STRING,
       allowNull: false
