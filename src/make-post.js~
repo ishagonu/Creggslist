@@ -1,0 +1,45 @@
+import React from 'react';
+import ReactDOM from 'react-dom'
+
+// Libraries
+import ImageUploader from 'react-images-upload';
+// Bootstrap imports
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+
+import './make-post.css';
+
+
+export default function Make_Post(){
+    constructor(props){
+	super(props);
+	this.state { pictures : [] };
+	this.onDrop = this.onDrop.bind(this);
+    }
+
+    onDrop(pictures){
+	this.setState({
+	    pictures : this.state.pictures.concat(picture),
+	});
+    }
+    const MAX_FILE_SIZE = 5242880; // in pixels
+    render(){
+	return(
+	    <ImageUploader
+		withIcon = {true}
+		buttonText = 'Choose Image to Upload'
+		onChange = {this.onDrop}
+		imgExtension = {['.jpg', '.gif', '.png', '.gif']}
+		maxFileSize = MAX_FILE_SIZE
+	    />
+	);
+    }
+	
+
+
+
+}
+
+
+
+
