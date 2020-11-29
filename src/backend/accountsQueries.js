@@ -1,5 +1,4 @@
 const { Accounts } = require('./models.js')
-const { Sequelize } = require('sequelize')
 
 // Get all accounts
 const getAllAccounts = async (req, res) => {
@@ -11,37 +10,14 @@ const getAllAccounts = async (req, res) => {
   }
 }
 
-// Get first 100 account usernames or names starting with input letters
-const searchAccounts = async (req, res) => {
-  try {
-    const { text } = req.params
-    const users = await Accounts.findAndCountAll({
-      limit: 100,
-      where: {
-        username: Sequelize.where(
-          Sequelize.fn('LOWER', Sequelize.col('username')),
-          'LIKE',
-          text + '%',
-        ),
-      },
-      attributes: ['id', 'name', 'username', 'phone_number', 'location'],
-    })
-    return res.status(200).json({ users })
-  } catch (error) {
-    return res.status(500).send(error.message)
-  }
-}
-
 // Creates account
 const createAccount = async (req, res) => {
   try {
     await Accounts.create({
-      id: req.body.params.id,
-      name: req.body.params.name,
-      username: req.body.params.username,
       email: req.body.params.email,
       photo: req.body.params.photo,
-      location: req.body.params.location,
+      password: req.body.params.password,
+      name: req.body.params.name
     })
     return res.status(201).send('Account created')
   } catch (error) {
@@ -49,77 +25,77 @@ const createAccount = async (req, res) => {
   }
 }
 
-// Get the account by id
-const getAccountById = async (req, res) => {
+// Get the account by email
+const getAccountByEmail = async (req, res) => {
   try {
-    const { id } = req.params
-    const user = await Accounts.findOne({ where: { id: id } })
+    const email = req.params.email
+    const user = await Accounts.findOne({ where: { email: email } })
     if (user) {
       return res.status(200).json({ user })
     }
-    return res.status(404).send('User with the specified ID does not exists')
+    return res.status(404).send('User with the specified email does not exists')
   } catch (error) {
     return res.status(500).send(error.message)
   }
 }
 
-// Update account by id
+// Update account by email
 const updateAccount = async (req, res) => {
   try {
-    const { id } = req.params
+    const email = req.params.email
     const updated = await Accounts.update(req.body.params, {
-      where: { id: id },
+      where: { email: email },
     })
     if (updated) {
       return res.status(200).send('Updated account info')
     }
-    return res.status(404).send('User with the specified ID does not exists')
+    return res.status(404).send('User with the specified email does not exists')
   } catch (error) {
     return res.status(500).send(error.message)
   }
 }
 
-// Delete account by id
+// Delete account by email
 const deleteAccount = async (req, res) => {
   try {
-    const { id } = req.params
+    const email = req.params.email
     const deleted = await Accounts.destroy({
-      where: { id: id },
+      where: { email: email },
     })
     if (deleted) {
       return res.status(204).send('User deleted')
     }
-    return res.status(404).send('User with the specified ID does not exists')
+    return res.status(404).send('User with the specified email does not exists')
   } catch (error) {
     return res.status(500).send(error.message)
   }
 }
 
-// Check if username exists
-const checkUsername = async (req, res) => {
+// Check if email exists
+const checkEmail = async (req, res) => {
   try {
-    const { username } = req.params
-    const user = await Accounts.findOne({ where: { username: username } })
+    const email = req.params.email
+    const user = await Accounts.findOne({ where: { email: email } })
     if (user) {
-      return res.status(404).send('Username unavailable')
+      return res.status(404).send('Email unavailable')
     }
-    return res.status(200).send('Username available')
+    return res.status(200).send('Email available')
   } catch (error) {
     return res.status(500).send(error.message)
   }
 }
 
-// Check if phone number exists
-const checkPhoneNumber = async (req, res) => {
+// Check if password exists
+const checkPassword = async (req, res) => {
   try {
-    const { phone_number } = req.params
+    const password = req.params.password
     const user = await Accounts.findOne({
-      where: { phone_number: phone_number },
+      where: { password: password },
     })
     if (user) {
-      return res.status(404).send('Phone number unavailable')
+      return res.status(404).send('Password unavailable')
     }
-    return res.status(200).send('Phone number available')
+    return res.status(200).send('Password available')
   } catch (error) {
     return res.status(500).send(error.message)
   }
@@ -128,10 +104,9 @@ const checkPhoneNumber = async (req, res) => {
 module.exports = {
   createAccount,
   getAllAccounts,
-  getAccountById,
+  getAccountByEmail,
   updateAccount,
   deleteAccount,
-  checkUsername,
-  checkPhoneNumber,
-  searchAccounts,
+  checkEmail,
+  checkPassword
 }

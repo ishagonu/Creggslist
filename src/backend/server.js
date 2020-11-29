@@ -18,25 +18,25 @@ if (app.get('env') === 'development') {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 }
 
-// // accounts table
-// app
-//   .route('/accounts')
-//   .get(accounts.getAllAccounts)
-//   .post(accounts.createAccount)
+// accounts table
+app
+  .route('/accounts')
+  .get(accounts.getAllAccounts)
+  .post(accounts.createAccount)
 
-// app
-//   .route('/accounts/:id')
-//   .get(accounts.getAccountById)
-//   .put(accounts.updateAccount)
-//   .delete(accounts.deleteAccount)
+app
+  .route('/accounts/:email')
+  .get(accounts.getAccountByEmail)
+  .put(accounts.updateAccount)
+  .delete(accounts.deleteAccount)
 
-// app
-//   .route('/email/:email')
-//   .get(accounts.checkEmail)
+app
+  .route('/email/:email')
+  .get(accounts.checkEmail)
 
-// app
-//   .route('/email/:password')
-//   .get(accounts.checkPassword)
+app
+  .route('/password/:password')
+  .get(accounts.checkPassword)
 
 // // friendships table
 // app
