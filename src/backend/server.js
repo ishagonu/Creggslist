@@ -18,44 +18,44 @@ if (app.get('env') === 'development') {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 }
 
-// accounts table
-app
-  .route('/accounts')
-  .get(accounts.getAllAccounts)
-  .post(accounts.createAccount)
+// // accounts table
+// app
+//   .route('/accounts')
+//   .get(accounts.getAllAccounts)
+//   .post(accounts.createAccount)
 
-app
-  .route('/accounts/:id')
-  .get(accounts.getAccountById)
-  .put(accounts.updateAccount)
-  .delete(accounts.deleteAccount)
+// app
+//   .route('/accounts/:id')
+//   .get(accounts.getAccountById)
+//   .put(accounts.updateAccount)
+//   .delete(accounts.deleteAccount)
 
-app
-  .route('/email/:email')
-  .get(accounts.checkEmail)
+// app
+//   .route('/email/:email')
+//   .get(accounts.checkEmail)
 
-app
-  .route('/email/:password')
-  .get(accounts.checkPassword)
+// app
+//   .route('/email/:password')
+//   .get(accounts.checkPassword)
 
-// friendships table
-app
-  .route('/posts')
-  .post(posts.createPosts)
-  .get(posts.getPosts)
+// // friendships table
+// app
+//   .route('/posts')
+//   .post(posts.createPosts)
+//   .get(posts.getPosts)
 
-app
-  .route('/posts/:user')
-  .get(posts.getPost)
+// app
+//   .route('/posts/:user')
+//   .get(posts.getPost)
 
-app
-  .route('/posts/search/:text')
-  .get(posts.searchPosts)
+// app
+//   .route('/posts/search/:text')
+//   .get(posts.searchPosts)
 
-app
-  .route('/posts/:user/:post')
-  .delete(posts.deletePost)
-  .put(posts.updatePost)
+// app
+//   .route('/posts/:user/:post')
+//   .delete(posts.deletePost)
+//   .put(posts.updatePost)
 
 app.listen(PORT, () => {
   console.log(`App running on port ${PORT}.`)
