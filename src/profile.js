@@ -4,6 +4,11 @@ import {Route, Link, Switch} from "react-router-dom";
 import Login from "./login.js"
 import "./profile.css";
 
+//import images from local
+import eggert from './assets/eggert.jpg'
+import smallberg from './assets/smallberg.jpg'
+import nachenberg from './assets/nachenberg.jpg'
+import reinman from './assets/reinman.jpg'
 import crackedEggert from "./assets/cracked_eggert.png";
 
 export default function Profile() {
@@ -14,11 +19,28 @@ export default function Profile() {
     const [password, setPassword] = useState("UNSET PASSWORD");
     const [showPasswordForm, setShowPasswordForm] = useState(false);
 
+    //Set up data: set name, username, etc from firebase + call choosephoto fx
     const viewerID = 123; //Dummy for now, sb passed in through props
     const profileID = 123;
     const sameUser = (viewerID === profileID); //Profile belongs to the user viewing
+    var photo = choosePhoto("smallberg");
 
-    
+    //Set which profile image to display
+    function choosePhoto(photoID) {
+        switch(photoID) {
+            case "eggert":
+                return eggert;
+            case "smallberg":
+                return smallberg;
+            case "nachenberg":
+                return nachenberg;
+            case "reinman":
+                return reinman;
+            default:
+                return crackedEggert;
+        }
+    }
+
     //Handle when the update password form is submitted + call update password fx to store new pw in Firebase
     function handleFormSubmit(event) {
         event.preventDefault(); //Prevent call of default handler
@@ -26,7 +48,7 @@ export default function Profile() {
         console.log("new password: " + password);
         setShowPasswordForm(!showPasswordForm); //Reset boolean so update password button is shown again
     }
-    
+
     //Should update password
     function handleUpdatePassword(event) {
         console.log("user wants to update their password");
@@ -42,7 +64,7 @@ export default function Profile() {
         <div>
             <h1 className="text"> {name}'s Profile Page </h1>
             <Card id="profileDisplay" className="bodyText">
-                <Card.Img variant="top" id="profilePhoto" src={crackedEggert}/>
+                <Card.Img variant="top" id="profilePhoto" src={photo}/>
                 <Card.Body>
                     <Card.Title id="title"> Mr. Egg </Card.Title>
                     <ListGroup variant="flush">
