@@ -58,7 +58,7 @@ const deletePost = async (req, res) => {
   try {
     const post = req.params.post
     const destroyed = await Posts.destroy({
-      where: { p_id: post }
+      where: { id: post }
     })
     if (destroyed) {
       return res.status(204).send('Post deleted')
@@ -72,9 +72,9 @@ const deletePost = async (req, res) => {
 // Update post by id
 const updatePost = async (req, res) => {
   try {
-    const id = req.params.post
+    const post = req.params.post
     const updated = await Posts.update(req.body.params, {
-      where: { id: id },
+      where: { id: post },
     })
     if (updated) {
       return res.status(200).send('Updated post content')
