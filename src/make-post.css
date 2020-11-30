@@ -58,8 +58,12 @@
   label{
       color:white;
   }
+  .placeholder-img img{
+      width: 100%;
+      margin: auto;
 
-  img {
+  }
+  .image-item img {
       width: 100%;
       margin: auto;
   }
