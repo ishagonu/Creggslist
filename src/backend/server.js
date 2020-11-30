@@ -38,24 +38,24 @@ app
   .route('/password/:password')
   .get(accounts.checkPassword)
 
-// // friendships table
-// app
-//   .route('/posts')
-//   .post(posts.createPosts)
-//   .get(posts.getPosts)
+// posts table
+app
+  .route('/posts')
+  .post(posts.createPosts)
+  .get(posts.getAllPosts)
 
-// app
-//   .route('/posts/:user')
-//   .get(posts.getPost)
+app
+  .route('/posts/user/:email')
+  .get(posts.getUserPosts)
 
-// app
-//   .route('/posts/search/:text')
-//   .get(posts.searchPosts)
+app
+  .route('/posts/search/:text')
+  .get(posts.searchPosts)
 
-// app
-//   .route('/posts/:user/:post')
-//   .delete(posts.deletePost)
-//   .put(posts.updatePost)
+app
+  .route('/posts/:post')
+  .delete(posts.deletePost)
+  .put(posts.updatePost)
 
 app.listen(PORT, () => {
   console.log(`App running on port ${PORT}.`)

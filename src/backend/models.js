@@ -48,18 +48,22 @@ const Posts = sequelize.define('posts', {
     autoIncrement: true,
     primaryKey: true,
   },
-  author_email: {
+  title:  {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: false
   },
   keywords: {
     type: DataTypes.ARRAY(DataTypes.STRING)
   },
-  photos: {
+  photo: {
     type: DataTypes.STRING
   },
   location: {
     type: DataTypes.INTEGER,
+    allowNull: false
+  },
+  price: {
+    type: DataTypes.DOUBLE,
     allowNull: false
   },
   content: {
@@ -68,10 +72,10 @@ const Posts = sequelize.define('posts', {
   },
 })
 
-Posts.belongsTo(Accounts, { foreignKey: 'author_info', foreignKeyConstraint: true })
+Posts.belongsTo(Accounts, { foreignKey: 'author_email', foreignKeyConstraint: true })
 
-sequelize.sync({ force: true }).then(() => {
-  console.log('Model was synchronized successfully.')
-})
+// sequelize.sync({ force: true }).then(() => {
+//   console.log('Model was synchronized successfully.')
+// })
 
 module.exports = { Accounts, Posts }
