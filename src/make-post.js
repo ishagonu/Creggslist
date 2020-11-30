@@ -10,8 +10,11 @@ import Form from 'react-bootstrap/Form';
 // CSS
 import './make-post.css';
 
+// Images
 import placeholder_img from './assets/placeholder.png'
-export default function Make_Post(){
+
+
+export default function Make_Post(email='eggert@creggslist.com'){
     const [images, setImages] = React.useState([]);
     const maxNumber = 1;
     const onChange = (imageList, addUpdateIndex) => {
@@ -24,8 +27,7 @@ export default function Make_Post(){
     const [zip, setZip] = React.useState('');
     const [price, setPrice] = React.useState(null);
     const [keywords, setKeywords] = React.useState('');
-    const [email, setEmail] = React.useState('');
-    
+    const user_email = email;
     function imagePicked(){
 	return images.length > 0;
     }
@@ -37,7 +39,7 @@ export default function Make_Post(){
 	return item_title.length > 0 && description.length > 0 && zip.length > 0 && price.length > 0 && keywords.length > 0;
     }
     return (
-	<div className='body'>
+	
 	    <div className='item_detail-container'>
 		<ImageUploading
 		    multiple
@@ -132,6 +134,6 @@ export default function Make_Post(){
 		</div>
 	
 	    </div>	    
-	</div>
+
     );
 }
