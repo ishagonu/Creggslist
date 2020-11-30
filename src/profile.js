@@ -8,57 +8,29 @@ import crackedEggert from "./assets/cracked_eggert.png";
 
 export default function Profile() {
     const [name, setName] = useState("Anonymous");
-    const [username, setUsername] = useState("username unknown");
-    const [email, setEmail] = useState("UNSETEMAIL");
-    const [phonenNumber, setPhoneNumber] = useState("UNSETPHONE");
-    const [location, setLocation] = useState("UNSETLOCATION");
+    const [username, setUsername] = useState("UNSET USERNAME");
+    const [email, setEmail] = useState("UNSET EMAIL");
+    const [location, setLocation] = useState("UNSET LOCATION");
+    const [password, setPassword] = useState("UNSET PASSWORD");
+    const [showPasswordForm, setShowPasswordForm] = useState(false);
 
-    const viewerID = 13; //Dummy for now, sb passed in through props
+    const viewerID = 123; //Dummy for now, sb passed in through props
     const profileID = 123;
     const sameUser = (viewerID === profileID); //Profile belongs to the user viewing
 
-    //Return form that allows user to edit their name, username, password, email, phone number, location
-    function handleEdit() {
-        //update user information
-        console.log("user wants to edit their profile");
-
-        return (
-            <Form>
-                <Form.Group controlId="name">
-                    <Form.Label>Name:</Form.Label> 
-                    <Form.Control>
-                        Name goes here, edit
-                    </Form.Control>
-                </Form.Group>
-
-            </Form>
-        );
-
-        /*<div className="Login">
-            <Form onSubmit={handleSubmit}>
-              <Form.Group size="lg" controlId="email">
-                <Form.Label className='text'>Email/Username: </Form.Label>
-                <Form.Control
-                  autoFocus
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group size="lg" controlId="password">
-                <Form.Label className='text'>Password: </Form.Label>
-                <Form.Control
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </Form.Group>
-              <Link to="/home"><Button block size="lg" type="submit" disabled={!validateForm()} variant="light">
-                Login
-              </Button>
-              </Link>
-            </Form>
-          </div> */
+    
+    //Handle when the update password form is submitted + call update password fx to store new pw in Firebase
+    function handleFormSubmit(event) {
+        event.preventDefault(); //Prevent call of default handler
+        console.log("handle form submit");
+        console.log("new password: " + password);
+        setShowPasswordForm(!showPasswordForm); //Reset boolean so update password button is shown again
+    }
+    
+    //Should update password
+    function handleUpdatePassword(event) {
+        console.log("user wants to update their password");
+        setPassword(event.target.value);
     }
 
     function handleLogout() {
@@ -76,18 +48,27 @@ export default function Profile() {
                     <ListGroup variant="flush">
                         <ListGroup.Item>@usernameEGG</ListGroup.Item>
                         <ListGroup.Item>Email: ifemailexists@email.com</ListGroup.Item>
-                        <ListGroup.Item>Phone number: 123456789</ListGroup.Item>
                         <ListGroup.Item>Located at: locationifexists</ListGroup.Item>
                     </ListGroup>
-                    <div>
-                        {sameUser && <Button 
+                    {sameUser && <div /* Only show update/log out buttons if user owns this profile */>
+                        {!showPasswordForm && <Button //Show update pw button if NOT showing form
                             variant="primary" 
                             block  
                             id="profileButton"
-                            onClick={handleEdit}
+                            onClick={() => setShowPasswordForm(!showPasswordForm)}
                         >
-                            Edit Profile
-                        </Button> /* Only show edit button is user owns this profile */ }
+                            Update Password
+                        </Button>}
+                        {showPasswordForm && <Form onSubmit={handleFormSubmit} /* Show form only after button clicked */>
+                            <Form.Group controlId="updatePassword">
+                                <Form.Label>New password:</Form.Label> 
+                                <Form.Control
+                                    type="password"
+                                    onChange={(event) => handleUpdatePassword(event)}
+                                    placeholder="Enter your new password"
+                                />
+                            </Form.Group>
+                        </Form>}
                         <Button 
                             variant="primary" 
                             block 
@@ -101,7 +82,7 @@ export default function Profile() {
                                 <Route path="/login" component={Login}/>
                             </Switch>
                         </Button>
-                    </div>
+                    </div> }
                 </Card.Body>
             </Card>
         </div>
