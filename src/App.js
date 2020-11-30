@@ -3,6 +3,7 @@ import Login from './login.js';
 import Signup from './signup.js';
 import Image from './image.js';
 import Home from './home.js';
+import Profile from './profile.js';
 import Make_Post from './make-post.js';
 
 import './App.css';
@@ -15,7 +16,7 @@ export default class App extends React.Component {
         <header>
           <h1 id='header'>Welcome to Creggslist!</h1>
         </header>
-        <Redirect exact from="/" to="/login" />
+        <Redirect exact from="/" to="/profile" />
         <Switch>
             <Route path='/login' component={Login} />
             <Route path='/signup' component={Signup} />
