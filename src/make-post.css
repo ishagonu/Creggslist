@@ -1,0 +1,72 @@
+@media all and (min-width: 480px) {
+  html,
+  body,
+  body > div,
+  .app {
+    /* height: 100%; */
+    background-color: rgb(181, 194, 236);
+    justify-content: center;
+    align-content: center;
+    /* flex: 1; */
+  }
+
+  .header {
+    color: white;
+    text-align: center;
+    margin-top: 3%;
+  }
+
+  .text {
+    font-family: Neucha;
+    color: white;
+    text-align: center;
+  }
+ 
+  .item_detail-container{
+      display: flex;
+      flex-direction: row;
+      margin-top: 5%;
+      align:center;
+  }
+  .image-item {
+      margin-top: -5%;
+      margin-right: 0;
+      
+  }
+  .upload__image-wrapper{
+      width: 50%;
+      text-align: left;
+      height: 100%
+  }
+
+  .image-upload_btn-wrapper{
+      flex-direction: row;
+      width: 100%;
+
+  }
+  .image-item__btn-wrapper {
+      flex-direction: row;
+      width: 100%;
+      margin: auto;
+  }
+
+  
+  .description-wrapper{
+      width: 50%;
+  }
+  
+  label{
+      color:white;
+  }
+  .placeholder-img img{
+      width: 100%;
+      margin: auto;
+
+  }
+  .image-item img {
+      width: 100%;
+      margin: auto;
+  }
+
+
+}
