@@ -7,6 +7,8 @@ import "./Login.css";
 import posts from './postsApi.js'
 import accounts from './accountsApi.js'
 // accounts.createUser('hubert', '123', 'hub@example.com', 'photo')
+// posts.createPost('hub@example.com', ['key', 'rice'], 'rice', 94536, 'food', 100.01, 'fried rice')
+// console.log(posts.getPosts('hub@example.com'))
 posts.searchPosts('rice', 94536)
 
 export default function Login() {

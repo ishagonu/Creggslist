@@ -89,6 +89,7 @@ const updatePost = async (req, res) => {
 const searchPosts = async (req, res) => {
   try {
     const text = req.params.text
+    console.log(req.body)
     if (req.body.params.location) {
       const users = await Posts.findAndCountAll({
         limit: 50,

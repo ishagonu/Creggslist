@@ -85,7 +85,7 @@ const searchPosts = async (text, location) => {
   return postsApi
     .get(`/posts/search/${text}`, {
       params: {
-        location: location
+        "location": location
       }
     })
     .then((res) => {
