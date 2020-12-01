@@ -56,7 +56,7 @@ app
 
 app
   .route('/posts/search/:text')
-  .get(posts.searchPosts)
+  .post(posts.searchPosts)
 
 app
   .route('/posts/:post')
