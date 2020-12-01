@@ -4,11 +4,12 @@ import Button from "react-bootstrap/Button";
 import { Route, Link, Switch } from 'react-router-dom';
 import Signup from './signup.js'
 import "./Login.css";
-
+import posts from './postsApi.js'
+posts.createPost('hubert@example.com', ['key', 'rice'], 'rice', 94536, 'food', 100.01, 'fried rice')
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  
   function validateForm() {
     return email.length > 0 && password.length > 0;
   }
