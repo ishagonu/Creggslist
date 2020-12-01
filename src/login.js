@@ -5,7 +5,10 @@ import { Route, Link, Switch } from 'react-router-dom';
 import Signup from './signup.js'
 import "./Login.css";
 import posts from './postsApi.js'
-posts.createPost('hubert@example.com', ['key', 'rice'], 'rice', 94536, 'food', 100.01, 'fried rice')
+import accounts from './accountsApi.js'
+// accounts.createUser('hubert', '123', 'hub@example.com', 'photo')
+posts.searchPosts('rice', 94536)
+
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

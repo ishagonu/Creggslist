@@ -86,9 +86,10 @@ const searchPosts = async (text, location) => {
     .get(`/posts/search/${text}`, {
       params: {
         location: location
-      },
+      }
     })
     .then((res) => {
+      console.log(res)
       return {
         count: res.data.users.count,
         postList: res.data.users.rows.map(function (posts) {
@@ -107,6 +108,7 @@ const searchPosts = async (text, location) => {
       }
     })
     .catch((error) => {
+      console.log(error)
       throw error.response.status
     })
 }
