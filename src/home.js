@@ -5,6 +5,7 @@ import ReactModal from 'react-modal';
 import Make_Post from './make-post.js';
 import Item_Info from './item-info.js';
 
+import Button from 'react-bootstrap/Button';
 import './home.css';
 
 import placeholder from './assets/placeholder.png';
@@ -72,7 +73,7 @@ export default class Home extends React.Component{
 			    {console.log(post.index)}
 			    <button onClick={this.handleOpenItemInfo} id={index}><img src={post.img_link} id={index} alt='error'/></button> 
 			    <ReactModal isOpen={this.state.showModal}>
-				<button onClick={this.handleCloseItemInfo}> Close </button>
+				<Button onClick={this.handleCloseItemInfo}> Close </Button>
 				<br/>
 				<Item_Info
 				    img_link={examplePosts[this.state.item_id].img_link}
