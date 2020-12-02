@@ -1,20 +1,22 @@
 import axios from 'axios'
 
-var myId = ''
 const postsApi = axios.create({
-  baseURL: 'localhost',
+  baseURL: 'https://creggslist.herokuapp.com',
   //baseURL: 'http://192.168.0.23:5000'
 })
 
 // creates post
-const createPost = async (post, content, author,) => {
+const createPost = async (author_email, keywords, photo, location, content, price, title) => {
   return postsApi
     .post(`/posts`, {
       params: {
-        post: post,
-        content: content, 
-        author: author,
-        date: date,
+        author_email: author_email,
+        keywords: keywords,
+        photo: photo,
+        location: location,
+        content: content,
+        price: price,
+        title: title
       },
     })
     .then((res) => {
@@ -26,17 +28,23 @@ const createPost = async (post, content, author,) => {
 }
 
 
-// gets a users posts
-const getPosts = async () => {
+// gets a user's posts
+const getPosts = async (email) => {
   return postsApi
-    .get(`/posts/${myId}`)
+    .get(`/posts/user/${email}`)
     .then((res) => {
       return {
         postList: res.data.posts.map(function (posts) {
           return {
-            id: posts.p_id,
+            author_email: posts.author_email,
+            keywords: posts.keywords,
+            photo: posts.photo,
+            location: posts.location,
             content: posts.content,
-            author: posts.author_id,
+            price: posts.price,
+            title: posts.title,
+            author_photo: posts.account.photo,
+            author_name: posts.account.name
           }
         }),
       }
@@ -47,12 +55,10 @@ const getPosts = async () => {
 }
 
 // update a post
-const updatePost = async (post, content) => {
+const updatePost = async (postId, content) => {
   return postsApi
-    .put(`/posts/${myId}/${post}`, {
-        params: {
-          content: content
-        },
+    .put(`/posts/${postId}`, {
+        params: content
       })
     .then((res) => {
       return res.status
@@ -63,9 +69,9 @@ const updatePost = async (post, content) => {
 }
 
 // remove a post
-const removePost= async (post) => {
+const removePost= async (postId) => {
   return postsApi
-    .delete(`/posts/${myId}/${post}`)
+    .delete(`/posts/${postId}`)
     .then((res) => {
       return res.status
     })
@@ -74,10 +80,43 @@ const removePost= async (post) => {
     })
 }
 
+// gets first 50 posts by filters, keywords, or title starting with text input
+const searchPosts = async (text, location) => {
+  return postsApi
+    .post(`/posts/search/${text}`, {
+      params: {
+        location: location
+      }
+    })
+    .then((res) => {
+      console.log(res)
+      return {
+        count: res.data.users.count,
+        postList: res.data.users.rows.map(function (posts) {
+          return {
+            author_email: posts.author_email,
+            keywords: posts.keywords,
+            photo: posts.photo,
+            location: posts.location,
+            content: posts.content,
+            price: posts.price,
+            title: posts.title,
+            author_photo: posts.account.photo,
+            author_name: posts.account.name
+          }
+        }),
+      }
+    })
+    .catch((error) => {
+      console.log(error)
+      throw error.response.status
+    })
+}
+
 export default {
   createPost,
   getPosts,
   updatePost,
-  removePost
-  
+  removePost,
+  searchPosts
 }
