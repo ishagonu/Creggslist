@@ -16,13 +16,13 @@ export default class App extends React.Component {
         <header>
           <h1 id='header'>Welcome to Creggslist!</h1>
         </header>
-        <Redirect exact from="/" to="/profile" />
+        <Redirect exact from="/" to="/login" />
         <Switch>
             <Route path='/login' component={Login} />
             <Route path='/signup' component={Signup} />
             <Route path='/home' component={Home} />
             <Route path='/image' component={Image} />
-	    <Route path='/make-post' component={Make_Post} />
+	          <Route path='/make-post' component={Make_Post} />
         </Switch>
       </div>
     )
