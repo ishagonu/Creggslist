@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
@@ -32,13 +32,6 @@ export default class Signup extends React.Component {
       redirect:false
     }
   }
-    // const [email, setEmail] = useState('');
-    // const [password, setPassword] = useState('');
-    // const [name, setName] = useState('')
-    // const [error, setError] = useState(false)
-    // const [image, setImage] = useState(null);
-    // const [redirect, setRedirect] = useState(false)
-    // const [routeTo, setRouteTo] = useState('/signup')
 
     onPick(image) {
       this.setState({image: image})
@@ -69,17 +62,16 @@ export default class Signup extends React.Component {
     }
 
     async createAccount() {
-      this.setState({redirect: true})
-      // if(verifyEmail){
-      //   if(verifyPassword){
-      //     await accountsApi.createUser(name, password, email, image).then( res =>
-      //       setRouteTo('/home')
-      //     ).catch(err => {
-      //       console.log(err)
-      //       setError(true)
-      //     })
-      //   }
-      // }
+      if(this.verifyEmail()){
+        if(this.verifyPassword()){
+          await accountsApi.createUser(this.state.name, this.state.password, this.state.email, this.state.image).then( res =>
+            this.setState({redirect: true})
+          ).catch(err => {
+            console.log(err)
+            this.setState({error: true})
+          })
+        }
+      }
     }
 
      handleSubmit(event) {
