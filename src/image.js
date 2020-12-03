@@ -43,7 +43,7 @@ export default function Image() {
                 />
             </div>
             <Button type="button" variant='light' onClick={() => console.log(image)}>Set</Button>
-            <div className="Login">
+            {/* <div className="Login">
                 <Form onSubmit={handleSubmit}>
                     <Form.Group size="lg" controlId="email">
                         <Form.Label className='text'>Name: </Form.Label>
@@ -60,7 +60,7 @@ export default function Image() {
                         </Button>
                     </Link>
                 </Form>
-            </div>
+            </div> */}
         </div>
     )
 }
