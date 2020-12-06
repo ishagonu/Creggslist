@@ -113,6 +113,39 @@ const searchPosts = async (text, location) => {
     })
 }
 
+// gets first 50 posts by filters, keywords, or title starting with text input
+const searchPosts = async (text, location) => {
+  return postsApi
+    .post(`/posts/search/${text}`, {
+      params: {
+        location: location
+      }
+    })
+    .then((res) => {
+      console.log(res)
+      return {
+        count: res.data.users.count,
+        postList: res.data.users.rows.map(function (posts) {
+          return {
+            author_email: posts.author_email,
+            keywords: posts.keywords,
+            photo: posts.photo,
+            location: posts.location,
+            content: posts.content,
+            price: posts.price,
+            title: posts.title,
+            author_photo: posts.account.photo,
+            author_name: posts.account.name
+          }
+        }),
+      }
+    })
+    .catch((error) => {
+      console.log(error)
+      throw error.response.status
+    })
+}
+
 export default {
   createPost,
   getPosts,

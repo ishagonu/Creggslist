@@ -135,6 +135,22 @@ const verifyAccount = async (email, password) => {
     })
 }
 
+const verifyAccount = async (email, password) => {
+  return accountsApi
+    .post(`/accounts/verify`, {
+      params: {
+        email: email,
+        password: password
+      }
+    })
+    .then((res) => {
+      return res
+    })
+    .catch((error) => {
+      throw error.response.status
+    })
+}
+
 export default {
   createUser,
   deleteUser,

@@ -1,24 +1,45 @@
 import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import Alert from "react-bootstrap/Alert";
 import { Route, Link, Switch } from 'react-router-dom';
 import Signup from './signup.js'
 import "./Login.css";
+import accountsApi from './accountsApi.js'
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  
+  const [error, setError] = useState(false)
+
+  async function login(){
+    await accountsApi.verifyAccount(email, password).then(res =>
+      console.log('hi')
+      //navigate to home
+      ).catch(err => {
+        console.log(err)
+        setError(true)
+      })
+  }
+
   function validateForm() {
     return email.length > 0 && password.length > 0;
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
   }
 
     return (
         <div>
+          {error && (
+            <Alert variant="danger" onClose={() => setError(false)} dismissible>
+              <Alert.Heading>Oh no! You got egged!</Alert.Heading>
+              <p>
+                So sorry! Please try again.
+              </p>
+            </Alert>
+          )}
           <h1 id='title' className='text'>Login</h1>
           <div className="Login">
             <Form onSubmit={handleSubmit}>
@@ -39,9 +60,10 @@ export default function Login() {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </Form.Group>
-              <Link to="/home"><Button block size="lg" type="submit" disabled={!validateForm()} variant="light">
-                Login
-              </Button>
+              <Link to="/home">
+                <Button block size="lg" type="submit" disabled={!validateForm()} variant="light" onClick={() => login()}>
+                  Login
+                </Button>
               </Link>
             </Form>
           </div>
