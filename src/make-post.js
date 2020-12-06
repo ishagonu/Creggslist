@@ -4,6 +4,7 @@ import ImageUploading from "react-images-uploading";
 import {Route, Link, Switch} from 'react-router-dom';
 import ReactModal from 'react-modal';
 
+// Directories
 import Home from './home.js'
 import Item_Info from './item-info.js';
 
@@ -14,7 +15,10 @@ import Form from 'react-bootstrap/Form';
 // CSS
 import './make-post.css';
 
-// Images
+// API
+import PostsApi from './postsapi.js';
+
+// Placeholder Image
 import placeholder_img from './assets/placeholder.png'
 
 
@@ -31,10 +35,9 @@ export default function Make_Post(){
     const [zip, setZip] = React.useState('');
     const [price, setPrice] = React.useState(null);
     const [keywords, setKeywords] = React.useState('');
-
+    
     const [showItemPreview, setItemPreview] = React.useState(false);
-
-
+   
     
     function imagePicked(){
 	return images.length > 0;
@@ -46,8 +49,32 @@ export default function Make_Post(){
     function validateForm(){
 	return images.length > 0 && item_title.length > 0 && description.length > 0 && zip.length > 0 && price.length > 0 && keywords.length > 0;
     }
+    function validInputs(){
+	var errorMessage = [];
+
+	// zip code must be a number with 5 digits
+	if (zip.length !== 5 || isNaN(Number(zip))){
+	    errorMessage.push('Enter a valid Zip Code (5 digit number)');
+	}
+
+	// price must be a number
+	if (isNaN(parseFloat(price))){
+	    errorMessage.push('Please enter a valid price');
+	}
+
+	if (errorMessage.length > 0){
+	    alert('Please fix the following issues : \n'+  errorMessage.join('\n'));
+	    errorMessage= [];
+	    return false;
+	}else{
+	    return true;
+	}
+	
+	
+    }
 
     function handleOpenItemInfo(){
+	if (!validInputs()){return}
 	setItemPreview(true); 
     }
 
@@ -58,8 +85,12 @@ export default function Make_Post(){
 	return showItemPreview;
     }
 
-    function doNothing(){
-	return
+    function makePost(){
+	if (!validInputs()){return}
+	const keys = keywords.split(',');
+	const email = 'junho.choix10@gmail.com';
+	const image_link = 'https://api.time.com/wp-content/uploads/2019/11/gettyimages-459761948.jpg?w=800&quality=85';
+	PostsApi.createPost(email, keys, image_link, zip, description, parseFloat(price), item_title);
     }
     return (
 	
@@ -69,7 +100,7 @@ export default function Make_Post(){
 		value={images}
 		onChange={onChange}
 		maxNumber={maxNumber}
-		dataURLKey="data_url"
+		dataURLKey='data_url'
 	    >
 		{({
 		    imageList,
@@ -97,13 +128,12 @@ export default function Make_Post(){
 			&nbsp;
 			{imageList.map((image, index) =>(
 			    <div key={index} className='image-item'>
-				<img src={image.data_url} alt='' width='100' height='345' />
+				<img src={image.data_url} alt='error'/>
 				<div className='image-item__btn-wrapper'>
 				    <Button size='lg' onClick={() => onImageUpdate(index)}>Update</Button>
 				    <Button size='lg' variant='light' onClick={() => onImageRemove(index)}>Remove</Button>
 				</div>
-			    </div>
-			    
+			    </div>			    
 			))}
 			
 		    </div>
@@ -143,8 +173,8 @@ export default function Make_Post(){
 				   onChange={(e) => setKeywords(e.target.value)}
 			    />
 			</div>
-			<Button size='lg' class='btn' style={{width: '50%'}} disabled={!validateForm()} onClick={() => doNothing()}> Post </Button>
-			<Button size='lg' class='btn' variant='light' style={{width: '50%'}} disabled={!validateForm()} onClick={() => setItemPreview(true)}> Preview </Button>
+			<Button size='lg' class='btn' style={{width: '50%'}} disabled={!validateForm()} onClick={() => makePost()}> Post </Button>
+			<Button size='lg' class='btn' variant='light' style={{width: '50%'}} disabled={!validateForm()} onClick={() => handleOpenItemInfo()}> Preview </Button>
 		    </form>
 		    <ReactModal isOpen={showPreview()}>
 			<Button onClick={()=>setItemPreview(false)}> Close </Button>
@@ -156,7 +186,7 @@ export default function Make_Post(){
 			    zip={zip}
 			    price={price}
 			    keywords={keywords}
-			    email='eggert@creggslist.com'
+			    email='email'
 			/>
 		    </ReactModal>
 		

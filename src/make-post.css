@@ -36,7 +36,7 @@
   .upload__image-wrapper{
       width: 50%;
       text-align: left;
-      height: 100%
+
   }
 
   .image-upload_btn-wrapper{
@@ -64,8 +64,9 @@
   }
   .image-item img {
       width: 100%;
+      max-height: 50%;
       margin-top: 10px;
-      
+		      
   }
 
 

@@ -60,40 +60,38 @@ export default class Home extends React.Component{
 	    }];
 
 	    
-        return(
-	    <div>
-		<p className='text'>This is Home</p>
-		<p className='text'><Link to="/make-post" id="link">Make Post</Link></p>
-		{examplePosts.map((post, index) => {
-		    return (
-			<div className='item-list'>
-			    {console.log(post.index)}
-			    <button onClick={this.handleOpenItemInfo} id={index}><img src={post.img_link} id={index} alt='error'/></button> 
-			    <ReactModal isOpen={this.state.showModal}>
-				<Button onClick={this.handleCloseItemInfo}> Close </Button>
-				<br/>
-				<Item_Info
-				    img_link={examplePosts[this.state.item_id].img_link}
-				    name={examplePosts[this.state.item_id].name}
-				    descript={examplePosts[this.state.item_id].descript}
-				    zip={examplePosts[this.state.item_id].zip}
-				    price={examplePosts[this.state.item_id].price}
-				    keywords={examplePosts[this.state.item_id].keywords}
-				    email={examplePosts[this.state.item_id].email}
-				/>
-			    </ReactModal>
-			</div>
+            return(
+		<div>
+		    <p className='text'>This is Home</p>
+		    <p className='text'><Link to="/make-post" id="link">Make Post</Link></p>
+		    {examplePosts.map((post, index) => {
+			return (
+			    <div className='item-list'>			  
+				<button onClick={this.handleOpenItemInfo} id={index}><img src={post.img_link} id={index} alt='error'/></button> 
+			    </div>
 
-		    )
-		})}
-	
-		
+			)
+		    })}
+		    
+		    <ReactModal isOpen={this.state.showModal}>
+			<Button onClick={this.handleCloseItemInfo}> Close </Button>
+			<br/>
+			<Item_Info
+			    img_link={examplePosts[this.state.item_id].img_link}
+			    name={examplePosts[this.state.item_id].name}
+			    descript={examplePosts[this.state.item_id].descript}
+			    zip={examplePosts[this.state.item_id].zip}
+			    price={examplePosts[this.state.item_id].price}
+			    keywords={examplePosts[this.state.item_id].keywords}
+			    email={examplePosts[this.state.item_id].email}
+			/>
+		    </ReactModal>
 
-		
-		<Switch>
-		    <Route path = '/make-post' component={Make_Post}/>
-		</Switch>
+		    
+		    <Switch>
+			<Route path = '/make-post' component={Make_Post}/>
+		    </Switch>
 		</div>
-        );
-    }
+            );
+	}
 }
