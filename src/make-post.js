@@ -90,7 +90,7 @@ export default function Make_Post(){
 	const keys = keywords.split(',');
 	const email = 'junho.choix10@gmail.com';
 	const image_link = 'https://api.time.com/wp-content/uploads/2019/11/gettyimages-459761948.jpg?w=800&quality=85';
-	PostsApi.createPost(email, keys, image_link, zip, description, parseFloat(price), item_title);
+	alert(PostsApi.createPost(email, keys, image_link, zip, description, parseFloat(price), item_title));
     }
     return (
 	
