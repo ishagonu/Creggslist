@@ -22,9 +22,9 @@ const createPost = async (author_email, keywords, photo, location, content, pric
     .then((res) => {
       return res.status
     })
-	.catch((error) => {
-	    alert("Error : Post was not uploaded");
-	throw error
+
+    .catch((error) => {
+      return Promise.reject(error)
     })
 }
 
@@ -51,7 +51,7 @@ const getPosts = async (email) => {
       }
     })
     .catch((error) => {
-      throw error.response.status
+      return Promise.reject(error)
     })
 }
 
@@ -65,7 +65,8 @@ const updatePost = async (postId, content) => {
       return res.status
     })
     .catch((error) => {
-	throw error
+
+      return Promise.reject(error)
     })
 }
 
@@ -77,7 +78,41 @@ const removePost= async (postId) => {
       return res.status
     })
     .catch((error) => {
-	throw error;
+
+      return Promise.reject(error)
+    })
+}
+
+// gets first 50 posts by filters, keywords, or title starting with text input
+const searchPosts = async (text, location) => {
+  return postsApi
+    .post(`/posts/search/${text}`, {
+      params: {
+        location: location
+      }
+    })
+    .then((res) => {
+      console.log(res)
+      return {
+        count: res.data.users.count,
+        postList: res.data.users.rows.map(function (posts) {
+          return {
+            author_email: posts.author_email,
+            keywords: posts.keywords,
+            photo: posts.photo,
+            location: posts.location,
+            content: posts.content,
+            price: posts.price,
+            title: posts.title,
+            author_photo: posts.account.photo,
+            author_name: posts.account.name
+          }
+        }),
+      }
+    })
+    .catch((error) => {
+      console.log(error)
+      return Promise.reject(error)
     })
 }
 

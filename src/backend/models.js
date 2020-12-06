@@ -59,7 +59,7 @@ const Posts = sequelize.define('posts', {
     type: DataTypes.STRING
   },
   location: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     allowNull: false
   },
   price: {
@@ -74,8 +74,8 @@ const Posts = sequelize.define('posts', {
 
 Posts.belongsTo(Accounts, { foreignKey: 'author_email', foreignKeyConstraint: true })
 
-// sequelize.sync({ force: true }).then(() => {
-//   console.log('Model was synchronized successfully.')
-// })
+sequelize.sync({ force: true }).then(() => {
+  console.log('Model was synchronized successfully.')
+})
 
 module.exports = { Accounts, Posts }
