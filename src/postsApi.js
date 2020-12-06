@@ -23,7 +23,7 @@ const createPost = async (author_email, keywords, photo, location, content, pric
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      return Promise.reject(error)
     })
 }
 
@@ -50,7 +50,7 @@ const getPosts = async (email) => {
       }
     })
     .catch((error) => {
-      throw error.response.status
+      return Promise.reject(error)
     })
 }
 
@@ -64,7 +64,7 @@ const updatePost = async (postId, content) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      return Promise.reject(error)
     })
 }
 
@@ -76,7 +76,7 @@ const removePost= async (postId) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      return Promise.reject(error)
     })
 }
 
@@ -109,7 +109,7 @@ const searchPosts = async (text, location) => {
     })
     .catch((error) => {
       console.log(error)
-      throw error.response.status
+      return Promise.reject(error)
     })
 }
 

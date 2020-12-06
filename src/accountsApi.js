@@ -20,7 +20,7 @@ const createUser = async (name, password, email, photo) => {
       return res.status
     })
     .catch((error) => {
-      console.log(error)
+      return Promise.reject(error)
     })
 }
 
@@ -34,7 +34,7 @@ const deleteUser = async (email) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      return Promise.reject(error)
     })
 }
 
@@ -51,7 +51,7 @@ const getUser = async (email) => {
       }
     })
     .catch((error) => {
-      throw error.response.status
+      return Promise.reject(error)
     })
 }
 
@@ -91,7 +91,7 @@ const updateUser = async (req, email) => {
       }
     })
     .catch((error) => {
-      throw error.response.status
+      return Promise.reject(error)
     })
 }
 
@@ -103,7 +103,7 @@ const checkEmail = async (email) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      return Promise.reject(error)
     })
 }
 
@@ -115,7 +115,7 @@ const checkPassword = async (password) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      return Promise.reject(error)
     })
 }
 
@@ -131,7 +131,7 @@ const verifyAccount = async (email, password) => {
       return res
     })
     .catch((error) => {
-      throw error.response.status
+      return Promise.reject(error)
     })
 }
 

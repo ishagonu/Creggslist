@@ -59,7 +59,7 @@ const Posts = sequelize.define('posts', {
     type: DataTypes.STRING
   },
   location: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     allowNull: false
   },
   price: {
