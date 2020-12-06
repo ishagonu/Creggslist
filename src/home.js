@@ -87,11 +87,11 @@ export default class Home extends React.Component{
 
 			    </ReactModal>
 
-		
-		<Switch>
-		    <Route path = '/make-post' component={Make_Post}/>
-		</Switch>
+		    
+		    <Switch>
+			<Route path = '/make-post' component={Make_Post}/>
+		    </Switch>
 		</div>
-        );
-    }
+            );
+	}
 }
