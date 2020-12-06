@@ -15,7 +15,7 @@ export default class Home extends React.Component{
     constructor(){
 	super()
 	this.state ={
-	    showItemInfo: false,
+	    showModal: false,
 	    item_id: 0
 	}
 	this.handleOpenItemInfo = this.handleOpenItemInfo.bind(this);
@@ -24,13 +24,10 @@ export default class Home extends React.Component{
     
     handleOpenItemInfo(event){
 	this.setState({item_id: event.target.id});
-
 	this.setState({showModal: true});
-
-	
     }
     handleCloseItemInfo(){
-	this.setState({ showModal: false});
+	this.setState({showModal: false});
 	this.setState({item_id: 0});
     }
     
