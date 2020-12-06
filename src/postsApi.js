@@ -65,7 +65,6 @@ const updatePost = async (postId, content) => {
       return res.status
     })
     .catch((error) => {
-
       return Promise.reject(error)
     })
 }
@@ -78,7 +77,6 @@ const removePost= async (postId) => {
       return res.status
     })
     .catch((error) => {
-
       return Promise.reject(error)
     })
 }

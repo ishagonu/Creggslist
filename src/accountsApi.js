@@ -131,22 +131,6 @@ const verifyAccount = async (email, password) => {
       return res
     })
     .catch((error) => {
-      return Promise.reject(error)
-    })
-}
-
-const verifyAccount = async (email, password) => {
-  return accountsApi
-    .post(`/accounts/verify`, {
-      params: {
-        email: email,
-        password: password
-      }
-    })
-    .then((res) => {
-      return res
-    })
-    .catch((error) => {
       throw error.response.status
     })
 }
