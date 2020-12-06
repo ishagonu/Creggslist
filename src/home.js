@@ -59,7 +59,7 @@ export default class Home extends React.Component{
 
 	    }];
 
-	    
+	
         return(
 	    <div>
 		<p className='text'>This is Home</p>
@@ -73,9 +73,8 @@ export default class Home extends React.Component{
 		    )
 		})}
 	
-		 <ReactModal isOpen={this.state.showModal}>
+		<ReactModal isOpen={this.state.showModal} >
 				<Button onClick={this.handleCloseItemInfo}> Close </Button>
-				<br/>
 				<Item_Info
 				    img_link={examplePosts[this.state.item_id].img_link}
 				    name={examplePosts[this.state.item_id].name}
@@ -85,6 +84,7 @@ export default class Home extends React.Component{
 				    keywords={examplePosts[this.state.item_id].keywords}
 				    email={examplePosts[this.state.item_id].email}
 				/>
+
 			    </ReactModal>
 
 		

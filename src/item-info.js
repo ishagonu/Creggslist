@@ -1,18 +1,23 @@
 import React from 'react';
-
+import {IoNavigateCircleOutline, IoAlertCircleOutline, IoPinOutline} from 'react-icons/io5';
+import {AiOutlineMail, } from 'react-icons/ai';
+import {BiMoney, } from 'react-icons/bi';
 export default function Item_Info(props){
     return(
 	<div className='item-info'>
-	    <div style={{display: 'flex'}}>
-		<h3><div style={{color: 'green'}}>${props.price}</div>
-		{props.name} </h3>
+
+	   
+	    <div style={{display: 'inline-block'}}>
+		<img src={props.img_link} alt='error' width='500'/>
+		 <h3>
+		 {props.name}</h3>
+		<p className='item-descript'><IoAlertCircleOutline/> <span style={{fontWeight: 'bold'}}> Description :</span> {props.descript}</p>
 	    </div>
-	    <img src={props.img_link} alt='error' width='250'/>
-	    <p className='item-descript'>{props.descript}</p>
+
 	    <br/>
-	    <br/>
-	    <p className='item-zip'>Area : {props.zip}</p>
-	    <p className='item-contact'>Contact : {props.email}</p>
+	    <p className='item-price'> <BiMoney/> <span style={{fontWeight: 'bold'}}> Price :</span> ${props.price}  </p>
+	    <p className='item-zip'><IoNavigateCircleOutline/><span style={{fontWeight: 'bold'}}> Area :</span> {props.zip}</p>
+	    <p className='item-contact'><AiOutlineMail/><span style={{fontWeight: 'bold'}}> Contact :</span> {props.email}</p>
 	</div>
     );    
 
