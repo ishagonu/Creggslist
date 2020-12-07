@@ -16,7 +16,7 @@ import Form from 'react-bootstrap/Form';
 import './make-post.css';
 
 // API
-import PostsApi from './postsapi.js';
+import PostsApi from './postsApi.js';
 
 // Placeholder Image
 import placeholder_img from './assets/placeholder.png'

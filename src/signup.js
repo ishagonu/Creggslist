@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
@@ -20,127 +20,115 @@ const width = window.innerWidth
 const margin = (width - 650)/2
 const imageList = [smallberg, nachenberg, reinman, eggert]
 
-export default class Signup extends React.Component {
-  constructor(props){
-    super(props)
-    this.state={
-      email:'',
-      password:'',
-      name:'',
-      error:false,
-      image:'',
-      redirect:false
-    }
-  }
-
-    onPick(image) {
-      this.setState({image: image})
-  }
+export default function Signup() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [image, setImage] = useState('')
+  const [name, setName] = useState('')
+  const [error, setError] = useState(false)
+  const [redirect, setRedirect] = useState(false)
   
-    validateForm() {
-      return this.state.email.length > 0 && this.state.password.length > 0
+    function validateForm() {
+      return email.length > 0 && password.length > 0 && name.length > 0 && image.length !== ''
     }
   
-    async verifyEmail(){
-      await accountsApi.checkEmail(this.state.email).then(res => {
+    async function verifyEmail(){
+      await accountsApi.checkEmail(email).then(res => {
         return true
       }).catch(err => {
         console.log(err)
-        this.setState({error:true})
+        setError(true)
         return false
       })
     }
 
-    async verifyPassword(){
-      await accountsApi.checkPassword(this.state.password).then(res => {
+    async function verifyPassword(){
+      await accountsApi.checkPassword(password).then(res => {
         return true
       }).catch(err => {
         console.log(err)
-        this.setState({error:true})
+        setError(true)
         return false
       })
     }
 
-    async createAccount() {
-      if(this.verifyEmail()){
-        if(this.verifyPassword()){
-          await accountsApi.createUser(this.state.name, this.state.password, this.state.email, this.state.image).then( res =>
-            this.setState({redirect: true})
-          ).catch(err => {
-            console.log(err)
-            this.setState({error: true})
+    async function createAccount() {
+      if(verifyEmail()){
+        if(verifyPassword()){
+          await accountsApi.createUser(name, password, email, image.src ).then( res => {
+            setRedirect(true)
+          }).catch(err => {
+            // console.log(err)
+            setError(true)
           })
         }
       }
     }
 
-     handleSubmit(event) {
+    async function handleSubmit(event) {
       event.preventDefault();
     }
   
-      render(){
-        if (this.state.redirect) {
+        if (redirect) {
           return <Redirect push to="/home" />;
         }
-
-        return (
-          <div>
-            {this.state.error && (
-              <Alert variant="danger" onClose={() => this.setState({error:false})} dismissible>
-                <Alert.Heading>Oh no! You got egged!</Alert.Heading>
-                <p>
-                  So sorry! Please try again.
-                </p>
-              </Alert>
-            )}
-            <div className='header'>
-              <h3 className='text' id='title' >Sign up</h3>
-              <h3>Choose a Profile Photo</h3>
-              <div style={{marginLeft:margin, marginBottom:'3%'}}>
-                  <ImagePicker 
-                      images={imageList.map((image, i) => ({src: image, value: i}))}
-                      onPick={(image) => this.setState({image: image})}
-                  />
+        else {
+          return (
+            <div>
+              {error && (
+                <Alert variant="danger" onClose={() => setError(false)} dismissible>
+                  <Alert.Heading>Oh no! You got egged!</Alert.Heading>
+                  <p>
+                    So sorry! Please try again.
+                  </p>
+                </Alert>
+              )}
+              <div className='header'>
+                <h3 className='text' id='title' >Sign up</h3>
+                <h3>Choose a Profile Photo</h3>
+                <div style={{marginLeft:margin, marginBottom:'3%'}}>
+                    <ImagePicker 
+                        images={imageList.map((image, i) => ({src: image, value: i}))}
+                        onPick={(image) => setImage(image)}
+                    />
+                </div>
               </div>
-            </div>
-            <div className="Login">
-              <Form onSubmit={() => this.handleSubmit()}>
-              <Form.Group size="lg" controlId="name">
-                <Form.Label className='text'>Name: </Form.Label>
-                <Form.Control
-                  type="name"
-                  value={this.state.name}
-                  onChange={(e) => this.setState({name: e.target.value})}
-                />
-              </Form.Group>
-                <Form.Group size="lg" controlId="email">
-                  <Form.Label className='text'>Email: </Form.Label>
+              <div className="Login">
+                <Form  onSubmit={handleSubmit}>
+                <Form.Group size="lg" controlId="name">
+                  <Form.Label className='text'>Name: </Form.Label>
                   <Form.Control
-                    autoFocus
-                    type="email"
-                    value={this.state.email}
-                    onChange={(e) => this.setState({email: e.target.value})}
+                    type="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                   />
                 </Form.Group>
-                <Form.Group size="lg" controlId="password">
-                <Form.Label className='text'>Password: </Form.Label>
-                <Form.Control
-                  type="password"
-                  value={this.state.password}
-                  onChange={(e) => this.setState({password:e.target.value})}
-                />
-              </Form.Group>
-              <Link to='/home'>
-                <Button block size="lg" type="submit" disabled={!this.validateForm()} variant="light">
-                  Sign Up
-                </Button>
-              </Link>
-            </Form>
+                  <Form.Group size="lg" controlId="email">
+                    <Form.Label className='text'>Email: </Form.Label>
+                    <Form.Control
+                      autoFocus
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </Form.Group>
+                  <Form.Group size="lg" controlId="password">
+                  <Form.Label className='text'>Password: </Form.Label>
+                  <Form.Control
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </Form.Group>
+                  <Button block size="lg" type="submit" disabled={!validateForm()} variant="light" onClick={() => createAccount()}>
+                    Sign Up
+                  </Button>
+              </Form>
+            </div>
+            <Switch>
+              <Route path='/home' component={Home} />
+            </Switch>
           </div>
-          <Switch>
-            <Route path='/home' component={Home} />
-          </Switch>
-        </div>
-      );
-      }
+        );
+        }
   }
