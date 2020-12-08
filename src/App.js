@@ -21,6 +21,7 @@ export default class App extends React.Component {
             <Route path='/login' component={Login} />
             <Route path='/signup' component={Signup} />
             <Route path='/home' component={Home} />
+            <Route path='/profile' component={Profile} />
             <Route path='/image' component={Image} />
 	          <Route path='/make-post' component={Make_Post} />
         </Switch>

@@ -1,7 +1,8 @@
 import React from "react";
-import { Card, ListGroup, Button, Form, Container, Row, Col } from "react-bootstrap";
+import { Alert, Card, ListGroup, Button, Form, Container, Row, Col } from "react-bootstrap";
 import { Route, Link, Switch } from "react-router-dom";
 import Login from "./login.js"
+import accountsApi from "./accountsApi.js";
 import "./profile.css";
 
 //import images from local
@@ -30,6 +31,7 @@ export default class Profile extends React.Component {
             showPasswordForm: false,
             userPosts: [], //post information for this user's posts
             hasPosts: false, //if user has posts or not
+            error: null, //contains something to be displayed if there is an error
         };
 
         //Bind functions just in case
@@ -70,7 +72,7 @@ export default class Profile extends React.Component {
     }
 
     //Handle when the update password form is submitted + call update password fx to store new pw in Firebase
-    handleFormSubmit(event) {
+    async handleFormSubmit(event) {
         const { password, showPasswordForm } = this.state;
         event.preventDefault(); //Prevent call of default handler
         console.log("handle form submit, new password: " + password);
@@ -78,13 +80,19 @@ export default class Profile extends React.Component {
     }
 
     //Should update password
-    handleUpdatePassword(event) {
+    async handleUpdatePassword(event) {
         console.log("user wants to update their password");
         this.setState({ password: event.target.value });
+        const { email, password } = this.state;
+
+        await accountsApi.updatePassword(password, email)
+            .catch((err) => {
+                console.log(`Error: ${err}`);
+                this.setState({ error: err });
+            });
     }
 
     handleLogout() {
-        //call logout backend fx?
         console.log("user wants to log out");
         return (
             <Switch>
@@ -94,64 +102,74 @@ export default class Profile extends React.Component {
     }
 
     render() {
-        const { name, photo, username, sameUser, email, location, showPasswordForm, hasPosts } = this.state;
+        const { name, photo, username, sameUser, email, location, showPasswordForm, hasPosts, error } = this.state;
         return (
-            <Container className="entireContainer" fluid>
-                <Row id="headerContainer" bsPrefix="headerContainer">
-                    <h1 className="smallerHeaderText"> {name ? name : "Anonymous"}'s Profile Page </h1>
-                </Row>
-                <Row>
-                    <Col /*bsPrefix overrides for custom CSS */ id="profileContainer" bsPrefix="profileContainer">
-                        <Card className="bodyText">
-                            <Card.Img variant="top" id="profilePhoto" src={photo} />
-                            <Card.Body>
-                                <Card.Title id="title"> Mr. Egg </Card.Title>
-                                <ListGroup variant="flush">
-                                    <ListGroup.Item>@{username ? username : "Username unknown"}</ListGroup.Item>
-                                    <ListGroup.Item>Email: {email ? email : "Email unknown"}</ListGroup.Item>
-                                    <ListGroup.Item>Located at: {location ? location : "Location unknown"}</ListGroup.Item>
-                                </ListGroup>
-                                {sameUser && <div /* Only show update/log out buttons if user owns this profile */>
-                                    {!showPasswordForm && <Button //Show update pw button if NOT showing form
-                                        variant="primary"
-                                        block
-                                        id="profileButton"
-                                        onClick={() => this.setState({ showPasswordForm: true })}
-                                    >
-                                        Update Password
+            <div>
+                {error && (
+                    <Alert variant="danger" onClose={() => this.setState({ error: !error })} dismissible>
+                        <Alert.Heading>Oh no! You got egged!</Alert.Heading>
+                        <p>
+                            So sorry! Please try again.
+                  </p>
+                    </Alert>
+                )}
+                <Container className="entireContainer" fluid>
+                    <Row id="headerContainer" bsPrefix="headerContainer">
+                        <h1 className="smallerHeaderText"> {name ? name : "Anonymous"}'s Profile Page </h1>
+                    </Row>
+                    <Row>
+                        <Col /*bsPrefix overrides for custom CSS */ id="profileContainer" bsPrefix="profileContainer">
+                            <Card className="bodyText">
+                                <Card.Img variant="top" id="profilePhoto" src={photo} />
+                                <Card.Body>
+                                    <Card.Title id="title"> Mr. Egg </Card.Title>
+                                    <ListGroup variant="flush">
+                                        <ListGroup.Item>@{username ? username : "Username unknown"}</ListGroup.Item>
+                                        <ListGroup.Item>Email: {email ? email : "Email unknown"}</ListGroup.Item>
+                                        <ListGroup.Item>Located at: {location ? location : "Location unknown"}</ListGroup.Item>
+                                    </ListGroup>
+                                    {sameUser && <div /* Only show update/log out buttons if user owns this profile */>
+                                        {!showPasswordForm && <Button //Show update pw button if NOT showing form
+                                            variant="primary"
+                                            block
+                                            id="profileButton"
+                                            onClick={() => this.setState({ showPasswordForm: true })}
+                                        >
+                                            Update Password
                                     </Button>}
-                                    {showPasswordForm && <Form onSubmit={this.handleFormSubmit} /* Show form only after button clicked */>
-                                        <Form.Group controlId="updatePassword">
-                                            <Form.Label>New password:</Form.Label>
-                                            <Form.Control
-                                                type="password"
-                                                onChange={(event) => this.handleUpdatePassword(event)}
-                                                placeholder="Enter your new password"
-                                            />
-                                        </Form.Group>
-                                    </Form>}
-                                    <Button
-                                        variant="primary"
-                                        block
-                                        id="profileButton"
-                                        onClick={this.handleLogout}
-                                    >
-                                        <Link to="/login" className="buttonText">
-                                            Log out
+                                        {showPasswordForm && <Form onSubmit={this.handleFormSubmit} /* Show form only after button clicked */>
+                                            <Form.Group controlId="updatePassword">
+                                                <Form.Label>New password:</Form.Label>
+                                                <Form.Control
+                                                    type="password"
+                                                    onChange={(event) => this.handleUpdatePassword(event)}
+                                                    placeholder="Enter your new password"
+                                                />
+                                            </Form.Group>
+                                        </Form>}
+                                        <Button
+                                            variant="primary"
+                                            block
+                                            id="profileButton"
+                                            onClick={this.handleLogout}
+                                        >
+                                            <Link to="/login" className="buttonText">
+                                                Log out
                                         </Link>
-                                    </Button>
-                                </div>}
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                    <Col className="postContainer" bsPrefix="postContainer">
-                        <div className="postContainer">
-                            {hasPosts && <h1> TODO make posts </h1>}
-                            {!hasPosts && <h1> no posts yet :( </h1>}
-                        </div>
-                    </Col>
-                </Row>
-            </Container>
+                                        </Button>
+                                    </div>}
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                        <Col className="postContainer" bsPrefix="postContainer">
+                            <div className="postContainer">
+                                {hasPosts && <h1> TODO make posts </h1>}
+                                {!hasPosts && <h1> no posts yet :( </h1>}
+                            </div>
+                        </Col>
+                    </Row>
+                </Container>
+            </div>
         );
     }
 }
