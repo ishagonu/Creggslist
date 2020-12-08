@@ -3,6 +3,8 @@ import { Alert, Card, ListGroup, Button, Form, Container, Row, Col } from "react
 import { Route, Link, Switch } from "react-router-dom";
 import Login from "./login.js"
 import accountsApi from "./accountsApi.js";
+import postsApi from './postsApi.js';
+import Item_Info from "./item-info.js";
 import "./profile.css";
 
 //import images from local
@@ -15,22 +17,17 @@ import crackedEggert from "./assets/cracked_eggert.png";
 export default class Profile extends React.Component {
     constructor(props) {
         super(props);
-        //const {viewerID, profileID} = this.props;
         this.state = {
-            //Set up data: set name, username, etc from firebase + call choosephoto fx
-            //const {viewerID, profileID} = this.props;
-            viewerID: 123, //Dummy for now, sb passed in through props
-            profileID: 123,
+            //Set up data: set name, etc from firebase + call choosephoto fx
+            //const {viewerEmail, profileEmail} = this.props;
+            viewerEmail: "helen@gmail.com",
+            profileEmail: "helen@gmail.com",
             sameUser: false, //Profile belongs to the user viewing
             name: null,
-            username: null,
             photo: crackedEggert,
-            email: null,
-            location: null,
             password: null,
             showPasswordForm: false,
             userPosts: [], //post information for this user's posts
-            hasPosts: false, //if user has posts or not
             error: null, //contains something to be displayed if there is an error
         };
 
@@ -41,18 +38,50 @@ export default class Profile extends React.Component {
         this.handleUpdatePassword = this.handleUpdatePassword.bind(this);
     }
 
-    //When profile screen mounts, set up data for the user profile
+    //When profile screen mounts, set up data for the user profile (user's info and posts)
     componentDidMount() {
-        const { viewerID, profileID, userPosts } = this.state;
-        //Get name, email, etc info from firebase
-        this.setState({
-            sameUser: viewerID === profileID,
-            hasPosts: userPosts.length === 0 ? false : true,
-        });
-    }
+        const { viewerEmail, profileEmail } = this.state;
 
-    //When profile screen unmounts, unsubscribe from firestore
-    componentWillUnmount() {
+        //Get name, email, photo, and password info from accounts database
+        let userInfo = accountsApi.getUser(profileEmail);
+        userInfo = {
+            email: "helen@gmail.com",
+            name: "mr egg",
+            photo: "smallberg",
+            password: "123123123",
+        }
+
+        //Get user posts w/ posts query
+        let postInfo = postsApi.getPosts(profileEmail);
+        postInfo = [
+            {
+                author_email: "hubes@yahoo.com",
+                keyword: ["yay", "egg"],
+                photo: "eggert",
+                location: "nowhere",
+                content: "test post pls work",
+                price: "100",
+                title: "PLS WORK",
+            },
+            {
+                author_email: "hanna@yahoo.com",
+                keyword: ["yay", "egg"],
+                photo: "eggert",
+                location: "nowhere",
+                content: "my brain is big",
+                price: "10000",
+                title: "yayy",
+            }
+        ];
+
+        this.setState({
+            sameUser: viewerEmail === profileEmail,
+            email: userInfo.email,
+            name: userInfo.name,
+            photo: this.choosePhoto(userInfo.photo),
+            password: userInfo.password,
+            userPosts: postInfo,
+        });
     }
 
     //Set which profile image to display
@@ -73,27 +102,28 @@ export default class Profile extends React.Component {
 
     //Handle when the update password form is submitted + call update password fx to store new pw in Firebase
     async handleFormSubmit(event) {
-        const { password, showPasswordForm } = this.state;
+        const {showPasswordForm } = this.state;
         event.preventDefault(); //Prevent call of default handler
-        console.log("handle form submit, new password: " + password);
+        //console.log("handle form submit, new password: " + password);
         this.setState({ showPasswordForm: !showPasswordForm }); //Reset boolean so update password button is shown again
     }
 
     //Should update password
     async handleUpdatePassword(event) {
-        console.log("user wants to update their password");
+        //console.log("user wants to update their password");
         this.setState({ password: event.target.value });
-        const { email, password } = this.state;
+        const { profileEmail, password } = this.state;
 
-        await accountsApi.updatePassword(password, email)
+        await accountsApi.updatePassword(password, profileEmail)
             .catch((err) => {
-                console.log(`Error: ${err}`);
+                console.log(`Oh no! Error: ${err}`);
                 this.setState({ error: err });
             });
     }
 
+    //Redirects to login page upon logout
     handleLogout() {
-        console.log("user wants to log out");
+        //console.log("user wants to log out");
         return (
             <Switch>
                 <Route exact path='/login' component={Login} />
@@ -102,10 +132,10 @@ export default class Profile extends React.Component {
     }
 
     render() {
-        const { name, photo, username, sameUser, email, location, showPasswordForm, hasPosts, error } = this.state;
+        const { name, photo, sameUser, profileEmail, showPasswordForm, userPosts, error } = this.state;
         return (
             <div>
-                {error && (
+                {error && ( //Alert box pops up if there is an error
                     <Alert variant="danger" onClose={() => this.setState({ error: !error })} dismissible>
                         <Alert.Heading>Oh no! You got egged!</Alert.Heading>
                         <p>
@@ -122,11 +152,10 @@ export default class Profile extends React.Component {
                             <Card className="bodyText">
                                 <Card.Img variant="top" id="profilePhoto" src={photo} />
                                 <Card.Body>
-                                    <Card.Title id="title"> Mr. Egg </Card.Title>
+                                    <Card.Title id="title"> {name} </Card.Title>
                                     <ListGroup variant="flush">
-                                        <ListGroup.Item>@{username ? username : "Username unknown"}</ListGroup.Item>
-                                        <ListGroup.Item>Email: {email ? email : "Email unknown"}</ListGroup.Item>
-                                        <ListGroup.Item>Located at: {location ? location : "Location unknown"}</ListGroup.Item>
+                                        <ListGroup.Item>@{name ? name : "Username unknown"}</ListGroup.Item>
+                                        <ListGroup.Item>Email: {profileEmail ? profileEmail : "Email unknown"}</ListGroup.Item>
                                     </ListGroup>
                                     {sameUser && <div /* Only show update/log out buttons if user owns this profile */>
                                         {!showPasswordForm && <Button //Show update pw button if NOT showing form
@@ -163,8 +192,19 @@ export default class Profile extends React.Component {
                         </Col>
                         <Col className="postContainer" bsPrefix="postContainer">
                             <div className="postContainer">
-                                {hasPosts && <h1> TODO make posts </h1>}
-                                {!hasPosts && <h1> no posts yet :( </h1>}
+                                {userPosts.length === 0 && <h1> User hasn't made any posts yet :( </h1>}
+                                {userPosts.length !== 0 &&
+                                    userPosts.map((post, index) => (
+                                        <Item_Info
+                                            img_link={post.photo ? post.photo : crackedEggert}
+                                            name={post.title}
+                                            descript={post.content ? post.content : "No description"}
+                                            price={post.price ? post.price : "Free"}
+                                            zip={post.location ? post.location : "Location unknown"}
+                                            email={post.email ? post.email : "eggert@ucla.edu"}
+                                        />
+                                    ))
+                                }
                             </div>
                         </Col>
                     </Row>
