@@ -1,148 +1,88 @@
 import axios from 'axios'
 
 const accountsApi = axios.create({
-  baseURL: 'localhost',
+  baseURL: 'https://creggslist.herokuapp.com/'
   //baseURL: 'http://192.168.0.23:5000'
 })
 
-// creates user and returns id
-const createUser = async (name, id, username, email, photo, location) => {
+// creates user and returns status
+const createUser = async (name, password, email, photo) => {
   return accountsApi
     .post('/accounts', {
       params: {
-        id: id,
-        name: name,
-        username: username,
         email: email,
         photo: photo,
-        location:location
-      },
+        password: password,
+        name: name
+      }
     })
     .then((res) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      return Promise.reject(error)
     })
 }
 
-// gets list of users
-const getAllUsers = async () => {
-  return accountsApi
-    .get('/accounts')
-    .then((res) => {
-      return {
-        status: res.status,
-        userList: res.data.users.map(function (users) {
-          // returns individual user info
-          return {
-            name: users.name,
-            username: users.username,
-            photo: users.photo,
-            id: users.id,
-            location: location.id
-          }
-        }),
-      }
-    })
-    .catch((error) => {
-      throw error.response.status
-    })
-}
 
-// gets first 100 account usernames/names starting with text input
-const searchUsers = async (text) => {
-  return accountsApi
-    .get(`/accounts/search/${text}`)
-    .then((res) => {
-      return {
-        status: res.status,
-        count: res.data.users.count,
-        userList: res.data.users.rows.map(function (users) {
-          // returns individual user info
-          return {
-            name: users.name,
-            username: users.username,
-            photo: users.photo,
-            id: users.id,
-            location: location.id
-          }
-        }),
-      }
-    })
-    .catch((error) => {
-      throw error.response.status
-    })
-}
 
 // deletes user and returns status
-const deleteUser = async () => {
+const deleteUser = async (email) => {
   return accountsApi
-    .delete(`/accounts/${myId}`)
+    .delete(`/accounts/${email}`)
     .then((res) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      return Promise.reject(error)
     })
 }
 
-// gets user by id and returns user info
-const getUser = async (id) => {
+// gets user by email and returns user info
+const getUser = async (email) => {
   return accountsApi
-    .get(`/accounts/${id}`)
+    .get(`/accounts/${email}`)
     .then((res) => {
       return {
-        location: res.location,
-        username: res.data.user.username,
         email: res.data.user.email,
-        phone_number: res.data.user.phone_number,
         name: res.data.user.name,
         photo: res.data.user.photo,
-        id: res.data.user.id,
+        password: res.data.user.password,
       }
     })
     .catch((error) => {
-      throw error.response.status
+      return Promise.reject(error)
     })
 }
 
-// update email and returns status
-const updateEmail = async (info) => {
+// update name and returns status
+const updateName = async (info, email) => {
   const req = {
-    email: info,
+    name: info
   }
-  return updateUser(req)
+  return updateUser(req, email)
 }
 
-// update username and returns status
-const updateUsername = async (info) => {
+// update photo and returns status
+const updatePhoto = async (info, email) => {
   const req = {
-    username: info,
+    photo: info
   }
-  return updateUser(req)
+  return updateUser(req, email)
 }
 
-// update username and returns status
-const updateName = async (info) => {
+// update password and returns status
+const updatePassword = async (info, email) => {
   const req = {
-    name: info,
+    password: info
   }
-  return updateUser(req)
-}
-
-// update username and returns status
-const updatePhoneNumber = async (info) => {
-  const req = {
-    phone_number: info,
-  }
-  return updateUser(req)
+  return updateUser(req, email)
 }
 
 // updates user and returns status
-const updateUser = async (req) => {
+const updateUser = async (req, email) => {
   return accountsApi
-    .put(`/accounts/${myId}`, {
+    .put(`/accounts/${email}`, {
       params: req,
     })
     .then((res) => {
@@ -151,28 +91,44 @@ const updateUser = async (req) => {
       }
     })
     .catch((error) => {
-      throw error.response.status
+      return Promise.reject(error)
     })
 }
 
-// checks username and returns status
-const checkUsername = async (username) => {
+// checks email and returns status
+const checkEmail = async (email) => {
   return accountsApi
-    .get(`/username/${username}`)
+    .get(`/email/${email}`)
     .then((res) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      return Promise.reject(error)
     })
 }
 
 // checks phone number and returns status
-const checkPhoneNumber = async (phoneNumber) => {
+const checkPassword = async (password) => {
   return accountsApi
-    .get(`/phoneNumber/${phoneNumber}`)
+    .get(`/password/${password}`)
     .then((res) => {
       return res.status
+    })
+    .catch((error) => {
+      return Promise.reject(error)
+    })
+}
+
+const verifyAccount = async (email, password) => {
+  return accountsApi
+    .post(`/accounts/verify`, {
+      params: {
+        email: email,
+        password: password
+      }
+    })
+    .then((res) => {
+      return res
     })
     .catch((error) => {
       throw error.response.status
@@ -180,15 +136,13 @@ const checkPhoneNumber = async (phoneNumber) => {
 }
 
 export default {
-    createUser,
-  getAllUsers,
+  createUser,
   deleteUser,
   getUser,
-  updateEmail,
-  updateUsername,
   updateName,
-  updatePhoneNumber,
-  checkUsername,
-  checkPhoneNumber,
-  searchUsers,
+  updatePassword,
+  updatePhoto,
+  checkEmail,
+  checkPassword,
+  verifyAccount
 }

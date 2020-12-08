@@ -36,7 +36,7 @@
   .upload__image-wrapper{
       width: 50%;
       text-align: left;
-      height: 100%
+
   }
 
   .image-upload_btn-wrapper{
@@ -60,12 +60,13 @@
   }
   .placeholder-img img{
       width: 100%;
-      margin: auto;
 
   }
   .image-item img {
       width: 100%;
-      margin: auto;
+      max-height: 50%;
+      margin-top: 10px;
+		      
   }
 
 

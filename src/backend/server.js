@@ -1,5 +1,6 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const cors = require('cors')
 const accounts = require('./accountsQueries.js')
 const posts = require('./postsQueries.js')
 
@@ -7,6 +8,7 @@ const app = express()
 var PORT = process.env.PORT || 5000
 
 app.use(bodyParser.json())
+app.use(cors({ origin: '*' }))
 app.use(
   bodyParser.urlencoded({
     extended: true,
@@ -31,6 +33,10 @@ app
   .delete(accounts.deleteAccount)
 
 app
+  .route('/accounts/verify')
+  .post(accounts.verifyAccount)
+
+app
   .route('/email/:email')
   .get(accounts.checkEmail)
 
@@ -50,7 +56,7 @@ app
 
 app
   .route('/posts/search/:text')
-  .get(posts.searchPosts)
+  .post(posts.searchPosts)
 
 app
   .route('/posts/:post')

@@ -1,24 +1,50 @@
 import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { Route, Link, Switch } from 'react-router-dom';
+import Alert from "react-bootstrap/Alert";
+import { Route, Link, Switch, Redirect } from 'react-router-dom';
 import Signup from './signup.js'
 import "./Login.css";
+import accountsApi from './accountsApi.js'
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(false)
+  const [redirect, setRedirect] = useState(false)
+
+
+  async function login(){
+    await accountsApi.verifyAccount(email, password).then(res =>
+      setRedirect(true)
+      ).catch(err => {
+        console.log(err)
+        setError(true)
+      })
+  }
 
   function validateForm() {
     return email.length > 0 && password.length > 0;
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
   }
 
-    return (
+    if (redirect) {
+      return <Redirect push to="/home" />;
+    }
+    else {
+      return (
         <div>
+          {error && (
+            <Alert variant="danger" onClose={() => setError(false)} dismissible>
+              <Alert.Heading>Oh no! You got egged!</Alert.Heading>
+              <p>
+                So sorry! Please try again.
+              </p>
+            </Alert>
+          )}
           <h1 id='title' className='text'>Login</h1>
           <div className="Login">
             <Form onSubmit={handleSubmit}>
@@ -39,10 +65,9 @@ export default function Login() {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </Form.Group>
-              <Link to="/home"><Button block size="lg" type="submit" disabled={!validateForm()} variant="light">
-                Login
-              </Button>
-              </Link>
+                <Button block size="lg" type="submit" disabled={!validateForm()} variant="light" onClick={() => login()}>
+                  Login
+                </Button>
             </Form>
           </div>
           <p className='text'>Don't have an account? Click <Link to="/signup" id="link">here</Link> to sign in</p>
@@ -51,4 +76,5 @@ export default function Login() {
           </Switch>
         </div>
       );
+    }
 }

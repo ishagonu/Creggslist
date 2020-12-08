@@ -5,6 +5,7 @@ import ReactModal from 'react-modal';
 import Make_Post from './make-post.js';
 import Item_Info from './item-info.js';
 
+import Button from 'react-bootstrap/Button';
 import './home.css';
 
 import placeholder from './assets/placeholder.png';
@@ -14,7 +15,7 @@ export default class Home extends React.Component{
     constructor(){
 	super()
 	this.state ={
-	    showItemInfo: false,
+	    showModal: false,
 	    item_id: 0
 	}
 	this.handleOpenItemInfo = this.handleOpenItemInfo.bind(this);
@@ -23,13 +24,10 @@ export default class Home extends React.Component{
     
     handleOpenItemInfo(event){
 	this.setState({item_id: event.target.id});
-
 	this.setState({showModal: true});
-
-	
     }
     handleCloseItemInfo(){
-	this.setState({ showModal: false});
+	this.setState({showModal: false});
 	this.setState({item_id: 0});
     }
     
@@ -61,19 +59,22 @@ export default class Home extends React.Component{
 
 	    }];
 
-	    
+	
         return(
 	    <div>
 		<p className='text'>This is Home</p>
 		<p className='text'><Link to="/make-post" id="link">Make Post</Link></p>
 		{examplePosts.map((post, index) => {
 		    return (
-			<div className='item-list'>
-			    {console.log(post.index)}
+			<div className='item-list'>			  
 			    <button onClick={this.handleOpenItemInfo} id={index}><img src={post.img_link} id={index} alt='error'/></button> 
-			    <ReactModal isOpen={this.state.showModal}>
-				<button onClick={this.handleCloseItemInfo}> Close </button>
-				<br/>
+			</div>
+
+		    )
+		})}
+	
+		<ReactModal isOpen={this.state.showModal} >
+				<Button onClick={this.handleCloseItemInfo}> Close </Button>
 				<Item_Info
 				    img_link={examplePosts[this.state.item_id].img_link}
 				    name={examplePosts[this.state.item_id].name}
@@ -83,19 +84,14 @@ export default class Home extends React.Component{
 				    keywords={examplePosts[this.state.item_id].keywords}
 				    email={examplePosts[this.state.item_id].email}
 				/>
+
 			    </ReactModal>
-			</div>
 
-		    )
-		})}
-	
-		
-
-		
-		<Switch>
-		    <Route path = '/make-post' component={Make_Post}/>
-		</Switch>
+		    
+		    <Switch>
+			<Route path = '/make-post' component={Make_Post}/>
+		    </Switch>
 		</div>
-        );
-    }
+            );
+	}
 }
