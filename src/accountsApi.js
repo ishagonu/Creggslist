@@ -14,7 +14,7 @@ const createUser = async (name, password, email, photo) => {
         photo: photo,
         password: password,
         name: name
-      },
+      }
     })
     .then((res) => {
       return res.status
