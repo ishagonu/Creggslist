@@ -6,7 +6,14 @@ var attributes = ['photo', 'name']
 // Get all posts
 const getAllPosts = async (req, res) => {
   try {
-    const posts = await Posts.findAll()
+    const posts = await Posts.findAndCountAll({
+      include: [
+        {
+          model: Accounts,
+          attributes: attributes
+        },
+      ],
+    })
     return res.status(200).json({ posts })
   } catch (error) {
     return res.status(500).send(error.message)

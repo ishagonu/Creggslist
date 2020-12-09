@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
-import { Route, Link, Switch, Redirect } from 'react-router-dom';
+import { Route, Link, Switch, Redirect, useRouteMatch } from 'react-router-dom';
 import 'reactjs-popup/dist/index.css';
 import "./Signup.css";
 import Login from './login.js'
@@ -70,7 +70,8 @@ export default function Signup() {
     }
   
         if (redirect) {
-          return <Redirect push to="/home" />;
+          // return <Redirect push to="/home"/>;
+          return <Route><Home email={email}/></Route>
         }
         else {
           return (
