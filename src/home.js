@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Navbar, NavDropdown, Form, FormControl } from 'react-bootstrap';
-import { Route, Link, Switch } from 'react-router-dom';
+import {Route, Link, Switch, useRouteMatch} from 'react-router-dom';
 import ReactModal from 'react-modal';
 import Make_Post from './make-post.js';
 import Item_Info from './item-info.js';

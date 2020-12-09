@@ -91,7 +91,6 @@ const searchPosts = async (text, location) => {
       }
     })
     .then((res) => {
-      console.log(res)
       return {
         count: res.data.users.count,
         postList: res.data.users.rows.map(function (posts) {
@@ -106,16 +105,44 @@ const searchPosts = async (text, location) => {
             author_photo: posts.account.photo,
             author_name: posts.account.name
           }
-        }),
+        })
       }
     })
     .catch((error) => {
-      console.log(error)
-	throw error
+	    return Promise.reject(error)
     })
 }
 
+// gets all posts
+const getAllPosts = async () => {
+  return postsApi
+    .get(`/posts`)
+    .then((res) => {
+      return {
+        count: res.data.users.count,
+        postList: res.data.users.rows.map(function (posts) {
+          return {
+            author_email: posts.author_email,
+            keywords: posts.keywords,
+            photo: posts.photo,
+            location: posts.location,
+            content: posts.content,
+            price: posts.price,
+            title: posts.title,
+            author_photo: posts.account.photo,
+            author_name: posts.account.name
+          }
+        })
+      }
+    })
+    .catch((error) => {
+      return Promise.reject(error)
+    })
+}
+
+
 export default {
+  getAllPosts,
   createPost,
   getPosts,
   updatePost,
