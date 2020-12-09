@@ -38,7 +38,10 @@ export default class Signup extends React.Component {
   }
   
     validateForm() {
-      return this.state.email.length > 0 && this.state.password.length > 0
+      if(this.state.email.length > 0 && this.state.password.length > 0)
+      {
+        this.createAccount()
+      }
     }
   
     async verifyEmail(){
@@ -64,6 +67,7 @@ export default class Signup extends React.Component {
     async createAccount() {
       if(this.verifyEmail()){
         if(this.verifyPassword()){
+          console.log(this.state.name)
           await accountsApi.createUser(this.state.name, this.state.password, this.state.email, this.state.image).then( res =>
             this.setState({redirect: true})
           ).catch(err => {
