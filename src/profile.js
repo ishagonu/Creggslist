@@ -52,7 +52,15 @@ export default class Profile extends React.Component {
         }
 
         //Get user posts w/ posts query
-        let postInfo = postsApi.getPosts(profileEmail);
+        let postInfo = [];
+        postsApi.getPosts(profileEmail)
+            .then((result) => (
+                //console.log("get users posts " + result.postList)
+                postInfo = result.postList
+            )).catch((err) => {
+                console.log(`Oh no! Get user posts ${err}`);
+                this.setState({ error: err });
+            });
         postInfo = [
             {
                 author_email: "hubes@yahoo.com",
@@ -102,7 +110,7 @@ export default class Profile extends React.Component {
 
     //Handle when the update password form is submitted + call update password fx to store new pw in Firebase
     async handleFormSubmit(event) {
-        const {showPasswordForm } = this.state;
+        const { showPasswordForm } = this.state;
         event.preventDefault(); //Prevent call of default handler
         //console.log("handle form submit, new password: " + password);
         this.setState({ showPasswordForm: !showPasswordForm }); //Reset boolean so update password button is shown again
@@ -195,14 +203,17 @@ export default class Profile extends React.Component {
                                 {userPosts.length === 0 && <h1> User hasn't made any posts yet :( </h1>}
                                 {userPosts.length !== 0 &&
                                     userPosts.map((post, index) => (
-                                        <Item_Info
-                                            img_link={post.photo ? post.photo : crackedEggert}
-                                            name={post.title}
-                                            descript={post.content ? post.content : "No description"}
-                                            price={post.price ? post.price : "Free"}
-                                            zip={post.location ? post.location : "Location unknown"}
-                                            email={post.email ? post.email : "eggert@ucla.edu"}
-                                        />
+                                        <div>
+                                            <Item_Info
+                                                img_link={post.photo ? post.photo : crackedEggert}
+                                                name={post.title}
+                                                descript={post.content ? post.content : "No description"}
+                                                price={post.price ? post.price : "Free"}
+                                                zip={post.location ? post.location : "Location unknown"}
+                                                email={post.email ? post.email : "eggert@ucla.edu"}
+                                            />
+                                            <hr className="postDivider"/>
+                                        </div>
                                     ))
                                 }
                             </div>

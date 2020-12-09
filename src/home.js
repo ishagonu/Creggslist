@@ -112,7 +112,6 @@ export default class Home extends React.Component {
 			<div>
 				<p className='text'>This is Home</p>
 				<p className='text'><Link to="/make-post" id="link">Make Post</Link></p>
-				{homePosts.length === 0 && <h1 className="text"> No posts yet :( </h1>}
 				<div>
 					<Navbar className="searchHeader" bg="light">
 						<Navbar.Brand> Find posts </Navbar.Brand>
@@ -150,7 +149,7 @@ export default class Home extends React.Component {
 						</Form>
 					</Navbar>
 				</div>
-
+				{homePosts.length === 0 && <h1 className="text"> No posts yet :( </h1>}
 				{homePosts.map((post, index) => {
 					return (
 						<div className='item-list'>

@@ -13,6 +13,12 @@
         border-radius: 1%;
     }
 
+    .postDivider {
+        margin: 25% 0% 15%;
+        border-top: 2px solid darkgray;
+        width: 210%;
+    }
+
     #profileContainer { /* Overall profile card, contaiing photo, info, and buttons */
         margin: 3% 5% 1% 5%; /* top right bottom left */
         width: 42%;
