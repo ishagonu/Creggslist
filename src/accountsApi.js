@@ -14,7 +14,7 @@ const createUser = async (name, password, email, photo) => {
         photo: photo,
         password: password,
         name: name
-      },
+      }
     })
     .then((res) => {
       return res.status
@@ -113,22 +113,6 @@ const checkPassword = async (password) => {
     .get(`/password/${password}`)
     .then((res) => {
       return res.status
-    })
-    .catch((error) => {
-      return Promise.reject(error)
-    })
-}
-
-const verifyAccount = async (email, password) => {
-  return accountsApi
-    .post(`/accounts/verify`, {
-      params: {
-        email: email,
-        password: password
-      }
-    })
-    .then((res) => {
-      return res
     })
     .catch((error) => {
       return Promise.reject(error)

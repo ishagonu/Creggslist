@@ -2,17 +2,21 @@
   "name": "creggslist",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "12.x"
+  },
   "dependencies": {
-    "cors": "^2.8.5",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "bootstrap": "^4.5.3",
+    "cors": "^2.8.5",
     "pg": "^8.5.1",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.0",
     "react-dom": "^17.0.1",
     "react-flip-move": "^3.0.4",
+    "react-icons": "^4.1.0",
     "react-image-picker": "^1.1.1",
     "react-images-upload": "^1.2.8",
     "react-images-uploading": "^3.1.2",
