@@ -1,5 +1,5 @@
 import React from "react";
-import {Route, Link, Switch} from 'react-router-dom';
+import {Route, Link, Switch, useRouteMatch} from 'react-router-dom';
 import ReactModal from 'react-modal';
 
 import Make_Post from './make-post.js';
@@ -29,7 +29,11 @@ export default class Home extends React.Component{
     handleCloseItemInfo(){
 	this.setState({showModal: false});
 	this.setState({item_id: 0});
-    }
+	}
+
+	componentDidMount(){
+		console.log(this.props.email)
+	}
     
 	render(){
 	    const examplePosts=[ {
