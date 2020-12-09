@@ -93,8 +93,8 @@ export default class Home extends React.Component {
 	}
 
 	//When home screen mounts, get information for all posts to display
-	componentWillMount() {
-		postsApi.searchPosts("", null) // 1st param is search query, 2nd is location (zipcode)
+	componentDidMount() {
+		postsApi.searchPosts(" b", null) // 1st param is search query, 2nd is location (zipcode)
 			.then((result) => (
 				this.setState({ homePosts: result.postList })
 			)).catch((err) => {

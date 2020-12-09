@@ -191,7 +191,7 @@ export default class Profile extends React.Component {
                                             onClick={this.handleLogout}
                                         >
                                             <Link to="/login" className="buttonText">
-                                                Log out
+                                                Log out! (Clicking me will redirect you to login)
                                         </Link>
                                         </Button>
                                     </div>}
