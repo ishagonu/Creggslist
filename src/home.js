@@ -10,6 +10,32 @@ import bicycle from './assets/bicycle.png';
 import './home.css';
 import postsApi from "./postsApi.js";
 
+const examplePosts = [{
+	photo: banana,
+	title: 'Bananas',
+	content: 'These bananas are so delicious, please buy them.',
+	location: '94582',
+	price: 5.50,
+	keywords: 'banana, yellow, fruit', /* sb array of strings */
+	author_email: 'hubert@creggslist.com'
+}, {
+	photo: bicycle,
+	title: 'Bicycle',
+	content: 'This bicycle is so fast.',
+	location: '95014',
+	price: 50.50,
+	keywords: 'bicycle, pony, fast',
+	author_email: 'hubert@creggslist.com'
+}, {
+	photo: placeholder,
+	title: 'Placeholder',
+	content: 'Nothing to see here.',
+	location: '00000',
+	price: 0.00,
+	keywords: '',
+	author_email: 'null@null.com'
+}];
+
 export default class Home extends React.Component {
 	constructor() {
 		super()
@@ -17,7 +43,7 @@ export default class Home extends React.Component {
 			showModal: false, //show pop-up w/ more detailed info
 			itemID: 0,
 			homePosts: [],
-			searchCategory: "keywords",
+			searchCategory: null,
 			searchInput: "",
 		}
 		this.openItemInfo = this.openItemInfo.bind(this);
@@ -38,80 +64,57 @@ export default class Home extends React.Component {
 	//Searches for posts if user uses nav bar, gets new information + stores it in state to rerender
 	searchForPosts() {
 		const { searchInput, searchCategory } = this.state;
-		console.log("search pots");
-		postsApi.searchPosts(searchCategory, searchInput)
-			.then((foundPosts) => (
-				console.log("search posts " + foundPosts)
+		console.log("search post");
+		postsApi.searchPosts(searchInput, searchCategory === "location" ? searchCategory : null )
+			.then((result) => (
+				console.log("search posts " + result.postList)
 				//this.setState({ homePosts: foundPosts })
 			)).catch((err) => {
-				console.log(`Oh no! ${err}`);
+				console.log(`Oh no! Search posts ${err}`);
 				this.setState({ error: err });
 			});
 		
+		this.setState({ homePosts: examplePosts });
 	}
 
 	//Get 50 most recent posts + stores in state to rerender w/o search filters
 	clearSearch() {
-		console.log("sesfdsfd");
-		postsApi.searchPosts("title", "")
-			.then((foundPosts) => (
-				console.log("clear search posts " + foundPosts)
-				//this.setState({ homePosts: foundPosts })
-			)).catch((err) => {
-				console.log(`Oh no! ${err}`);
-				this.setState({ error: err });
-			});
-		this.setState({searchInput: "", searchCategory: "keywords"});
+		console.log("clear search");
+		postsApi.searchPosts("", null) // 1st param is search query, 2nd is location (zipcode)
+		.then((result) => (
+			this.setState({ homePosts: result.postList })
+		)).catch((err) => {
+			console.log(`Oh no! Clear search ${err}`);
+			this.setState({ error: err });
+		});
+
+		this.setState({ searchInput: "", searchCategory: null });
+		this.setState({homePosts: []}); //remove later!!
 	}
 
 	//When home screen mounts, get information for all posts to display
 	componentWillMount() {
-		/*postsApi.searchPosts("title", "")
-			.then((foundPosts) => (
-				this.setState({ homePosts: foundPosts })
+		postsApi.searchPosts("", null) // 1st param is search query, 2nd is location (zipcode)
+			.then((result) => (
+				this.setState({ homePosts: result.postList })
 			)).catch((err) => {
-				console.log(`Oh no! ${err}`);
+				console.log(`Oh no! Component mount ${err}`);
 				this.setState({ error: err });
-			}); */
+			});
 
-		const examplePosts = [{
-			photo: banana,
-			title: 'Bananas',
-			content: 'These bananas are so delicious, please buy them.',
-			location: '94582',
-			price: 5.50,
-			keywords: 'banana, yellow, fruit',
-			author_email: 'hubert@creggslist.com'
-		}, {
-			photo: bicycle,
-			title: 'Bicycle',
-			content: 'This bicycle is so fast.',
-			location: '95014',
-			price: 50.50,
-			keywords: 'bicycle, pony, fast',
-			author_email: 'hubert@creggslist.com'
-		}, {
-			photo: placeholder,
-			title: 'Placeholder',
-			content: 'Nothing to see here.',
-			location: '00000',
-			price: 0.00,
-			keywords: '',
-			author_email: 'null@null.com'
-		}];
-
-		this.setState({ homePosts: examplePosts });
+		//this.setState({ homePosts: examplePosts });
 	}
 
 	render() {
-		const { homePosts, itemID } = this.state;
+		const { homePosts, itemID, showModal } = this.state;
 
 		return (
 			<div>
 				<p className='text'>This is Home</p>
 				<p className='text'><Link to="/make-post" id="link">Make Post</Link></p>
+				{homePosts.length === 0 && <h1 className="text"> No posts yet :( </h1>}
 				<div>
-					<Navbar bg="light" expand="lg">
+					<Navbar className="searchHeader" bg="light">
 						<Navbar.Brand> Find posts </Navbar.Brand>
 						<NavDropdown title="Select by">
 							<NavDropdown.Item onClick={() => this.setState({ searchCategory: "keywords" })}>
@@ -120,29 +123,32 @@ export default class Home extends React.Component {
 							<NavDropdown.Item onClick={() => this.setState({ searchCategory: "title" })}>
 								Title
 						</NavDropdown.Item>
+							<NavDropdown.Item onClick={() => this.setState({ searchCategory: "location" })}>
+								Location (Zip code)
+						</NavDropdown.Item>
 						</NavDropdown>
+						<Form inline>
+							<FormControl
+								type="text"
+								placeholder="Search"
+								className="mr-sm-2"
+								//Stores user's search query in state
+								onChange={(event) => this.setState({ searchInput: event.target.value })}
+							/>
+							<Button
+								variant="outline-primary"
+								onClick={this.searchForPosts}
+							>
+								Search
+								</Button>
+							<Button
+								variant="outline-primary"
+								onClick={this.clearSearch}
+							>
+								Clear search
+								</Button>
+						</Form>
 					</Navbar>
-					<Form inline>
-						<FormControl
-							type="text"
-							placeholder="Search"
-							className="mr-sm-2"
-							//Stores user's search query in state
-							onChange={(event) => this.setState({ searchInput: event.target.value })}
-						/>
-						<Button
-							variant="light"
-							onClick={this.searchForPosts}
-						>
-							Search
-					</Button>
-						<Button
-							variant="light"
-							onClick={this.clearSearch}
-						>
-							Clear search
-					</Button>
-					</Form>
 				</div>
 
 				{homePosts.map((post, index) => {
@@ -155,18 +161,20 @@ export default class Home extends React.Component {
 					)
 				})}
 
-				<ReactModal isOpen={this.state.showModal} /* When the post image is clicked, pop-up opens up w/ item info */>
-					<Button onClick={this.closeItemInfo}> Close </Button>
-					<Item_Info
-						img_link={homePosts[itemID].photo}
-						name={homePosts[itemID].title}
-						descript={homePosts[itemID].content}
-						zip={homePosts[itemID].location}
-						price={homePosts[itemID].price}
-						keywords={homePosts[itemID].keywords}
-						email={homePosts[itemID].author_email}
-					/>
-				</ReactModal>
+				{showModal &&
+					<ReactModal isOpen={showModal} /* When the post image is clicked, pop-up opens up w/ item info */>
+						<Button onClick={this.closeItemInfo}> Close </Button>
+						<Item_Info
+							img_link={homePosts[itemID].photo ? homePosts[itemID].photo : "No photo"}
+							name={homePosts[itemID].title}
+							descript={homePosts[itemID].content}
+							zip={homePosts[itemID].location}
+							price={homePosts[itemID].price}
+							keywords={homePosts[itemID].keywords}
+							email={homePosts[itemID].author_email}
+						/>
+					</ReactModal>
+				}
 
 				<Switch>
 					<Route path='/make-post' component={Make_Post} />

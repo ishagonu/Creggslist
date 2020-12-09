@@ -22,17 +22,28 @@
     text-align: center;
   }
  
+  /*Styling for search bar title and drop down */
+  .searchHeader {
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 2%;
+    margin-bottom: 2%;
+    width: 80%;
+    height: 10%;
+    border-radius: 2%;
+  }
+
   .item-list{
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      grid-gap: 10px;
-      grid-auto-rows: 200px;
+    margin: 1% 2% 1% 2%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-gap: 10px;
+    grid-auto-rows: 200px;
   }
   .item-list img {
       width: 250px;
   }
   .item-info-modal {
-   	
     width: 50%;
     height: 50%;
     margin: 0;
