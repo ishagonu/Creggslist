@@ -7,74 +7,72 @@ const config = {
   password: process.env.USERS_PASSWORD,
   port: process.env.USERS_PORT,
   database: process.env.USERS_DATABASE,
-  host: 'localhost',
+  host: process.env.USERS_HOST,
   dialect: 'postgresql',
+  ssl: {
+    rejectUnauthorized: false,
+  },
 }
 const sequelize = new Sequelize(config)
 const Accounts = sequelize.define(
   'accounts',
   {
-    id: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
-      unique: true,
-      primaryKey: true,
-    },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    username: {
-      type: DataTypes.STRING(20),
-      unique: true,
-      allowNull: false,
-    },
     email: {
       type: DataTypes.STRING,
       unique: true,
       allowNull: false,
+      primaryKey: true,
       validate: {
         isEmail: true,
       },
     },
-    phone_number: {
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    photo: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    password: {
       type: DataTypes.STRING,
       unique: true,
-    },
-    location: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    photo: DataTypes.STRING,
-    // password: DataTypes.STRING(20)
-  },
-  {
-    indexes: [
-      {
-        unique: true,
-        fields: ['id', 'username', 'email'],
-      },
-    ],
-  },
+      allowNull: false
+    }
+  }
 )
 
 const Posts = sequelize.define('posts', {
-  p_id: {
-    type: DataTypes.BIGINT,
-    allowNull: false,
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
     primaryKey: true,
   },
-  date: {
-      type: DataTypes.DATE,
-      allowNull: false
+  title:  {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  keywords: {
+    type: DataTypes.ARRAY(DataTypes.STRING)
+  },
+  photo: {
+    type: DataTypes.STRING
+  },
+  location: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  price: {
+    type: DataTypes.DOUBLE,
+    allowNull: false
   },
   content: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: false
   },
 })
 
-Posts.belongsTo(Accounts, { foreignKey: 'author_id', foreignKeyConstraint: true })
+Posts.belongsTo(Accounts, { foreignKey: 'author_email', foreignKeyConstraint: true })
 
 sequelize.sync({ force: true }).then(() => {
   console.log('Model was synchronized successfully.')
