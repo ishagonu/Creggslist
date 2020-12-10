@@ -16,8 +16,8 @@ export default class App extends React.Component {
       <div>
         <header>
           <h1 id='header'>Welcome to Creggslist!</h1>
-        </header>
-        <Redirect exact from="/" to="/Login" />
+        </header>k
+        <Redirect exact from="/" to="/login" />
         <Switch>b
             <Route path='/login' component={Login} />
             <Route path='/signup' component={Signup} />

@@ -18,7 +18,6 @@ export default class Profile extends React.Component {
         super(props);
         this.state = {
             //Set up data: set name, etc from firebase fx
-            //const {viewerEmail, profileEmail} = this.props;
             viewerEmail: this.props.viewerEmail, // "hwang12@ucla.edu",
             profileEmail: this.props.profileEmail, //"junho.choix10@gmail.com",
             sameUser: false, //Profile belongs to the user viewing
