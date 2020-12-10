@@ -10,36 +10,6 @@ import postsApi from "./postsApi.js";
 import './home.css';
 import Profile from "./profile.js";
 
-import placeholder from './assets/placeholder.png';
-import banana from './assets/bananas.jpg';
-import bicycle from './assets/bicycle.png';
-
-const examplePosts = [{
-	photo: banana,
-	title: 'Bananas',
-	content: 'These bananas are so delicious, please buy them.',
-	location: '94582',
-	price: 5.50,
-	keywords: 'banana, yellow, fruit', /* sb array of strings */
-	author_email: 'hubert@creggslist.com'
-}, {
-	photo: bicycle,
-	title: 'Bicycle',
-	content: 'This bicycle is so fast.',
-	location: '95014',
-	price: 50.50,
-	keywords: 'bicycle, pony, fast',
-	author_email: 'hubert@creggslist.com'
-}, {
-	photo: placeholder,
-	title: 'Placeholder',
-	content: 'Nothing to see here.',
-	location: '00000',
-	price: 0.00,
-	keywords: '',
-	author_email: 'null@null.com'
-}];
-
 export default class Home extends React.Component {
 	constructor() {
 		super()
