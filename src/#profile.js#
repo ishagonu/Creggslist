@@ -135,7 +135,7 @@ export default class Profile extends React.Component {
                         </Row>
                     </Row>
                     <Row>
-                        <Col /*bsPrefix overrides for custom CSS */ id="profileContainer" bsPrefix="profileContainer">
+                        <Col  id="profileContainer" bsPrefix="profileContainer">
                             <Card className="bodyText">
                                 <Card.Img variant="top" id="profilePhoto" src={photo} />
                                 <Card.Body>
@@ -189,7 +189,7 @@ export default class Profile extends React.Component {
                                                 descript={post.content ? post.content : "No description"}
                                                 price={post.price ? post.price : "Free"}
                                                 zip={post.location ? post.location : "Location unknown"}
-                                                email={post.author_email ? post.author_email : "eggert@ucla.edu"}
+                                                email={post.email ? post.email : "eggert@ucla.edu"}
                                             />
                                             <hr className="postDivider" />
                                         </div>
