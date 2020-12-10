@@ -40,6 +40,7 @@ export default class Home extends React.Component {
 	constructor() {
 		super()
 		this.state = {
+			viewerEmail: null, //get current user's email from props in componentdidmount
 			showModal: false, //show pop-up w/ more detailed info
 			itemID: 0,
 			homePosts: [],
@@ -102,11 +103,13 @@ export default class Home extends React.Component {
 				this.setState({ error: err });
 			});
 
+		this.setState({viewerEmail: this.props.email});
 		//this.setState({ homePosts: examplePosts });
 	}
 
 	render() {
-		const { homePosts, itemID, showModal } = this.state;
+		const { homePosts, itemID, showModal, viewerEmail } = this.state;
+		console.log("home email in render = " + viewerEmail);
 
 		return (
 			<div>
@@ -149,7 +152,7 @@ export default class Home extends React.Component {
 						</Form>
 					</Navbar>
 				</div>
-				{homePosts.length === 0 && <h1 className="text"> No posts yet :( </h1>}
+				{homePosts.length === 0 && <h1 className="text"> No posts :( </h1>}
 				{homePosts.map((post, index) => {
 					return (
 						<div className='item-list'>

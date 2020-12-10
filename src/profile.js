@@ -1,7 +1,10 @@
 import React from "react";
 import { Alert, Card, ListGroup, Button, Form, Container, Row, Col } from "react-bootstrap";
 import { Route, Link, Switch } from "react-router-dom";
+import { AiOutlineHome } from "react-icons/ai"
+
 import Login from "./login.js"
+import Home from './home.js'
 import accountsApi from "./accountsApi.js";
 import postsApi from './postsApi.js';
 import Item_Info from "./item-info.js";
@@ -29,6 +32,7 @@ export default class Profile extends React.Component {
             showPasswordForm: false,
             userPosts: [], //post information for this user's posts
             error: null, //contains something to be displayed if there is an error
+            goHome: false,
         };
 
         //Bind functions just in case
@@ -47,7 +51,7 @@ export default class Profile extends React.Component {
         userInfo = {
             email: "helen@gmail.com",
             name: "mr egg",
-            photo: "smallberg",
+            photo: "smallberg.jpg",
             password: "123123123",
         }
 
@@ -86,25 +90,26 @@ export default class Profile extends React.Component {
             sameUser: viewerEmail === profileEmail,
             email: userInfo.email,
             name: userInfo.name,
-            photo: this.choosePhoto(userInfo.photo),
+            photo: userInfo.photoID ? this.choosePhoto(userInfo.photo) : crackedEggert,
             password: userInfo.password,
             userPosts: postInfo,
         });
+
+        this.setState({goHome: false});
     }
 
     //Set which profile image to display
     choosePhoto(photoID) {
-        switch (photoID) {
-            case "eggert":
-                return eggert;
-            case "smallberg":
-                return smallberg;
-            case "nachenberg":
-                return nachenberg;
-            case "reinman":
-                return reinman;
-            default:
-                return crackedEggert;
+        if (photoID.includes("eggert")) {
+            return eggert;
+        } else if (photoID.includes("smallberg")) {
+            return smallberg;
+        } else if (photoID.includes("nachenberg")) {
+            return nachenberg;
+        } else if (photoID.includes("reinman")) {
+            return reinman;
+        } else {
+            return crackedEggert;
         }
     }
 
@@ -124,7 +129,7 @@ export default class Profile extends React.Component {
 
         await accountsApi.updatePassword(password, profileEmail)
             .catch((err) => {
-                console.log(`Oh no! Error: ${err}`);
+                console.log(`Oh no! Password update error: ${err}`);
                 this.setState({ error: err });
             });
     }
@@ -140,7 +145,17 @@ export default class Profile extends React.Component {
     }
 
     render() {
-        const { name, photo, sameUser, profileEmail, showPasswordForm, userPosts, error } = this.state;
+        const { name, photo, sameUser, viewerEmail, profileEmail, showPasswordForm, userPosts, error, goHome } = this.state;
+        if (goHome === true) {
+            return (
+                <div>
+                    <Switch>
+                        <Route><Home email={viewerEmail} /></Route>
+                    </Switch>
+                </div>
+            );
+        }
+
         return (
             <div>
                 {error && ( //Alert box pops up if there is an error
@@ -152,8 +167,15 @@ export default class Profile extends React.Component {
                     </Alert>
                 )}
                 <Container className="entireContainer" fluid>
+
                     <Row id="headerContainer" bsPrefix="headerContainer">
-                        <h1 className="smallerHeaderText"> {name ? name : "Anonymous"}'s Profile Page </h1>
+                        <Row className="profileHeader">
+                            <h1 className="smallerHeaderText"> {name ? name : "Anonymous"}'s Profile Page </h1>
+                            <Button variant="light" className="homeButton" onClick={() => this.setState({ goHome: !goHome })}>
+                                <AiOutlineHome className="homeIcon" />
+                                Home
+                            </Button>
+                        </Row>
                     </Row>
                     <Row>
                         <Col /*bsPrefix overrides for custom CSS */ id="profileContainer" bsPrefix="profileContainer">
@@ -191,7 +213,7 @@ export default class Profile extends React.Component {
                                             onClick={this.handleLogout}
                                         >
                                             <Link to="/login" className="buttonText">
-                                                Log out! (Clicking me will redirect you to login)
+                                                Log out! (Clicking my text will redirect you to login)
                                         </Link>
                                         </Button>
                                     </div>}
@@ -212,7 +234,7 @@ export default class Profile extends React.Component {
                                                 zip={post.location ? post.location : "Location unknown"}
                                                 email={post.email ? post.email : "eggert@ucla.edu"}
                                             />
-                                            <hr className="postDivider"/>
+                                            <hr className="postDivider" />
                                         </div>
                                     ))
                                 }
