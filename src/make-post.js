@@ -1,5 +1,5 @@
 // Libraries
-import React from 'react';
+import React, {useState} from 'react';
 import ImageUploading from "react-images-uploading";
 import {Route, Link, Switch, Redirect} from 'react-router-dom';
 import ReactModal from 'react-modal';
@@ -20,15 +20,13 @@ import PostsApi from './postsApi.js';
 
 // Placeholder Image
 import placeholder_img from './assets/placeholder.png'
+import {storage} from './firebase.js'
 
 
 export default function Make_Post(){
     const [images, setImages] = React.useState([]);
     const maxNumber = 1;
-    const onChange = (imageList, addUpdateIndex) => {
-	console.log(imageList, addUpdateIndex);
-	setImages(imageList);
-    };
+ 
 
     const [item_title, setItemTitle] = React.useState('');
     const [description, setDescription] = React.useState('');
@@ -38,7 +36,66 @@ export default function Make_Post(){
 
     const [redirect, setRedirect] = React.useState(false)
     const [showItemPreview, setItemPreview] = React.useState(false);
-   
+	
+    //For firebase upload
+    const allInputs = {imgUrl: ''}
+    const [imageAsFile, setImageAsFile] = useState('')
+    const [imageAsUrl, setImageAsUrl] = useState(allInputs)
+
+    async function dataURLtoFile(dataurl, filename) {
+	var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+	    bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+	while(n--){
+            u8arr[n] = bstr.charCodeAt(n);
+	}
+	return new File([u8arr], filename, {type:mime});
+    }
+    
+    const onChange = (imageList, addUpdateIndex) => {
+	console.log(imageList, addUpdateIndex);
+	setImages(imageList);
+	setImageAsFile('')
+	if (imageList.length >= 1) {
+	    setImgUrl(imageList[0].data_url)
+	}
+    };
+    async function setImgUrl(data_url){
+	await dataURLtoFile(data_url, 'file.img').then(file=>{
+	    setImageAsFile(file)
+	
+	    handleFireBaseUpload(file)
+	})
+
+    }
+
+    async function handleFireBaseUpload(file) {
+	console.log('start of upload')
+	// async magic goes here...
+	if(imageAsFile === '') {
+	    console.error(`not an image, the image file is a ${typeof(file)}`)
+	}
+	const uploadTask = storage.ref(`/images/${file.name}`).put(file)
+	//initiates the firebase side uploading 
+	uploadTask.on('state_changed', 
+		      (snapShot) => {
+			  //takes a snap shot of the process as it is happening
+			  console.log(snapShot)
+		      }, (err) => {
+			  //catches the errors
+			  
+			  console.log(err)
+		      }, () => {
+			  // gets the functions from storage refences the image storage in firebase by the children
+			  // gets the download url then sets the image from firebase as the value for the imgUrl key:
+			  storage.ref('images').child(file.name).getDownloadURL()
+			      .then(function(url){
+				  setImageAsUrl(url)
+				  return
+			      })
+		      })
+	
+    }
+   //end of firebase functions
     
     function imagePicked(){
 	return images.length > 0;
@@ -86,18 +143,21 @@ export default function Make_Post(){
 	return showItemPreview;
     }
 
-    async function makePost(){
+    async function makePost() {
 	if (!validInputs()){return}
 	const keys = keywords.split(',');
 	const email = 'junho.choix10@gmail.com'; // Change this
-	const image_link = 'https://api.time.com/wp-content/uploads/2019/11/gettyimages-459761948.jpg?w=800&quality=85';
 	
-	await PostsApi.createPost(email, keys, image_link, zip, description, parseFloat(price), item_title).then(res =>
-	    setRedirect(true)
-	).catch(err =>{
-	    alert('Oh no! You got egged!')
-	})
+	await PostsApi.createPost(email, keys, imageAsUrl, zip, description, parseFloat(price), item_title).then(res => {
+		setRedirect(true)
+	    }).catch(err =>{
+		alert('Oh no! You got egged!')
+	    })
     }
+					  
+			
+					 
+					
     if (redirect) {
 	return <Redirect push to= '/home' />;
     }else {
@@ -129,8 +189,10 @@ export default function Make_Post(){
 				    {...dragProps}
 				>
 				    Click or Drop here
-				</Button>
-				<Button onClick={()=>uploadHelp()} size='lg' variant='light'>?</Button>
+			</Button>
+			    	<Button onClick={()=>uploadHelp()} size='lg' variant='light'>?</Button>
+
+			   
 			    </div>
 			    
 			    &nbsp;
@@ -181,8 +243,11 @@ export default function Make_Post(){
 				       onChange={(e) => setKeywords(e.target.value)}
 				/>
 			    </div>
-			    <Button size='lg' class='btn' style={{width: '50%'}} disabled={!validateForm()} onClick={() => makePost()}> Post </Button>
-			    <Button size='lg' class='btn' variant='light' style={{width: '50%'}} disabled={!validateForm()} onClick={() => handleOpenItemInfo()}> Preview </Button>
+		<Button size='lg' class='btn' style={{width: '50%'}} disabled={!validateForm()} onClick={() => makePost()}> Post </Button>
+		<Button size='lg' class='btn' variant='light' style={{width: '50%'}} disabled={!validateForm()} onClick={() => handleOpenItemInfo()}> Preview </Button>
+		
+
+
 			</form>
 			<ReactModal isOpen={showPreview()}>
 			    <Button onClick={()=>setItemPreview(false)}> Close </Button>

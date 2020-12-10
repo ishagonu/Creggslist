@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
-import { Route, Link, Switch, Redirect } from 'react-router-dom';
+import { Route, Link, Switch, Redirect, useRouteMatch } from 'react-router-dom';
 import Signup from './signup.js'
+import Home from './home.js'
 import "./Login.css";
 import accountsApi from './accountsApi.js'
 
@@ -31,8 +32,10 @@ export default function Login() {
     event.preventDefault();
   }
 
+
     if (redirect) {
-      return <Redirect push to="/home" />;
+      // return <Redirect push to="/home"/>;
+      return <Route><Home email={email}/></Route>
     }
     else {
       return (
@@ -49,7 +52,7 @@ export default function Login() {
           <div className="Login">
             <Form onSubmit={handleSubmit}>
               <Form.Group size="lg" controlId="email">
-                <Form.Label className='text'>Email/Username: </Form.Label>
+                <Form.Label className='text'>Email: </Form.Label>
                 <Form.Control
                   autoFocus
                   type="email"

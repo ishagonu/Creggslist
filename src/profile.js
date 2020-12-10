@@ -1,91 +1,99 @@
 import React from "react";
-import { Card, ListGroup, Button, Form, Container, Row, Col } from "react-bootstrap";
+import { Alert, Card, ListGroup, Button, Form, Container, Row, Col } from "react-bootstrap";
 import { Route, Link, Switch } from "react-router-dom";
+import { AiOutlineHome } from "react-icons/ai"
+
 import Login from "./login.js"
+import Home from './home.js'
+import accountsApi from "./accountsApi.js";
+import postsApi from './postsApi.js';
+import Item_Info from "./item-info.js";
 import "./profile.css";
 
 //import images from local
-import eggert from './assets/eggert.jpg'
-import smallberg from './assets/smallberg.jpg'
-import nachenberg from './assets/nachenberg.jpg'
-import reinman from './assets/reinman.jpg'
 import crackedEggert from "./assets/cracked_eggert.png";
 
 export default class Profile extends React.Component {
     constructor(props) {
         super(props);
-        //const {viewerID, profileID} = this.props;
         this.state = {
-            //Set up data: set name, username, etc from firebase + call choosephoto fx
-            //const {viewerID, profileID} = this.props;
-            viewerID: 123, //Dummy for now, sb passed in through props
-            profileID: 123,
+            //Set up data: set name, etc from firebase fx
+            viewerEmail: this.props.viewerEmail, // "hwang12@ucla.edu",
+            profileEmail: this.props.profileEmail, //"junho.choix10@gmail.com",
             sameUser: false, //Profile belongs to the user viewing
             name: null,
-            username: null,
             photo: crackedEggert,
-            email: null,
-            location: null,
             password: null,
             showPasswordForm: false,
             userPosts: [], //post information for this user's posts
-            hasPosts: false, //if user has posts or not
+            error: null, //contains something to be displayed if there is an error
+            goHome: false,
         };
 
         //Bind functions just in case
-        this.choosePhoto = this.choosePhoto.bind(this);
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
         this.handleLogout = this.handleLogout.bind(this);
         this.handleUpdatePassword = this.handleUpdatePassword.bind(this);
     }
 
-    //When profile screen mounts, set up data for the user profile
+    //When profile screen mounts, set up data for the user profile (user's info and posts)
     componentDidMount() {
-        const { viewerID, profileID, userPosts } = this.state;
-        //Get name, email, etc info from firebase
+        const { viewerEmail, profileEmail } = this.state;
+
+        //Get name, email, photo, and password info from accounts database
+        postsApi.getPosts(profileEmail)
+            .then((result) => (
+                this.setState({ userPosts: result.postList === null ? [] : result.postList})
+            )).catch((err) => {
+                console.log(`Oh no! Get user posts ${err}`);
+                this.setState({ error: err });
+            });
+
+        //Get user posts w/ posts query
+        accountsApi.getUser(profileEmail)
+            .then((result) => (
+                //console.log("get users posts " + result.postList)
+                this.setState({
+                    email: result.email,
+                    name: result.name,
+                    photo: result.photo ? result.photo : crackedEggert,
+                    password: result.password
+                })
+            )).catch((err) => {
+                console.log(`Oh no! Get user info ${err}`);
+                this.setState({ error: err });
+            });
+
         this.setState({
-            sameUser: viewerID === profileID,
-            hasPosts: userPosts.length === 0 ? false : true,
+            sameUser: viewerEmail === profileEmail,
+            goHome: false,
         });
     }
 
-    //When profile screen unmounts, unsubscribe from firestore
-    componentWillUnmount() {
-    }
-
-    //Set which profile image to display
-    choosePhoto(photoID) {
-        switch (photoID) {
-            case "eggert":
-                return eggert;
-            case "smallberg":
-                return smallberg;
-            case "nachenberg":
-                return nachenberg;
-            case "reinman":
-                return reinman;
-            default:
-                return crackedEggert;
-        }
-    }
-
     //Handle when the update password form is submitted + call update password fx to store new pw in Firebase
-    handleFormSubmit(event) {
-        const { password, showPasswordForm } = this.state;
+    async handleFormSubmit(event) {
+        const { showPasswordForm } = this.state;
         event.preventDefault(); //Prevent call of default handler
-        console.log("handle form submit, new password: " + password);
+        //console.log("handle form submit, new password: " + password);
         this.setState({ showPasswordForm: !showPasswordForm }); //Reset boolean so update password button is shown again
     }
 
     //Should update password
-    handleUpdatePassword(event) {
-        console.log("user wants to update their password");
+    async handleUpdatePassword(event) {
+        //console.log("user wants to update their password");
         this.setState({ password: event.target.value });
+        const { profileEmail, password } = this.state;
+
+        await accountsApi.updatePassword(password, profileEmail)
+            .catch((err) => {
+                console.log(`Oh no! Password update error: ${err}`);
+                this.setState({ error: err });
+            });
     }
 
+    //Redirects to login page upon logout
     handleLogout() {
-        //call logout backend fx?
-        console.log("user wants to log out");
+        //console.log("user wants to log out");
         return (
             <Switch>
                 <Route exact path='/login' component={Login} />
@@ -94,64 +102,104 @@ export default class Profile extends React.Component {
     }
 
     render() {
-        const { name, photo, username, sameUser, email, location, showPasswordForm, hasPosts } = this.state;
-        return (
-            <Container className="entireContainer" fluid>
-                <Row id="headerContainer" bsPrefix="headerContainer">
-                    <h1 className="smallerHeaderText"> {name ? name : "Anonymous"}'s Profile Page </h1>
-                </Row>
-                <Row>
-                    <Col /*bsPrefix overrides for custom CSS */ id="profileContainer" bsPrefix="profileContainer">
-                        <Card className="bodyText">
-                            <Card.Img variant="top" id="profilePhoto" src={photo} />
-                            <Card.Body>
-                                <Card.Title id="title"> Mr. Egg </Card.Title>
-                                <ListGroup variant="flush">
-                                    <ListGroup.Item>@{username ? username : "Username unknown"}</ListGroup.Item>
-                                    <ListGroup.Item>Email: {email ? email : "Email unknown"}</ListGroup.Item>
-                                    <ListGroup.Item>Located at: {location ? location : "Location unknown"}</ListGroup.Item>
-                                </ListGroup>
-                                {sameUser && <div /* Only show update/log out buttons if user owns this profile */>
-                                    {!showPasswordForm && <Button //Show update pw button if NOT showing form
-                                        variant="primary"
-                                        block
-                                        id="profileButton"
-                                        onClick={() => this.setState({ showPasswordForm: true })}
-                                    >
-                                        Update Password
+        const { name, photo, sameUser, viewerEmail, profileEmail, showPasswordForm, userPosts, error, goHome } = this.state;
+        if (goHome === true) { //If user clicks home button, this will redirect to home screen
+            return (
+                <div>
+                    <Switch>
+                        <Route><Home email={viewerEmail} /></Route>
+                    </Switch>
+                </div>
+            );
+        }
+
+        return ( //If not redirecting to Home, render the profile screen
+            <div>
+                {error && ( //Alert box pops up if there is an error
+                    <Alert variant="danger" onClose={() => this.setState({ error: !error })} dismissible>
+                        <Alert.Heading>Oh no! You got egged!</Alert.Heading>
+                        <p>
+                            So sorry! Please try again.
+                  </p>
+                    </Alert>
+                )}
+                <Container className="entireContainer" fluid>
+
+                    <Row id="headerContainer" bsPrefix="headerContainer">
+                        <Row className="profileHeader">
+                            <h1 className="smallerHeaderText"> {name ? name : "Anonymous"}'s Profile Page </h1>
+                            <Button variant="light" className="homeButton" onClick={() => this.setState({ goHome: !goHome })}>
+                                <AiOutlineHome className="homeIcon" />
+                                Home
+                            </Button>
+                        </Row>
+                    </Row>
+                    <Row>
+                        <Col /*bsPrefix overrides for custom CSS */ id="profileContainer" bsPrefix="profileContainer">
+                            <Card className="bodyText">
+                                <Card.Img variant="top" id="profilePhoto" src={photo} />
+                                <Card.Body>
+                                    <Card.Title id="title"> {name} </Card.Title>
+                                    <ListGroup variant="flush">
+                                        <ListGroup.Item>Username: {name ? name : profileEmail}</ListGroup.Item>
+                                        <ListGroup.Item>Email: {profileEmail ? profileEmail : "Email unknown"}</ListGroup.Item>
+                                    </ListGroup>
+                                    {sameUser && <div /* Only show update/log out buttons if user owns this profile */>
+                                        {!showPasswordForm && <Button //Show update pw button if NOT showing form
+                                            variant="primary"
+                                            block
+                                            id="profileButton"
+                                            onClick={() => this.setState({ showPasswordForm: true })}
+                                        >
+                                            Update Password
                                     </Button>}
-                                    {showPasswordForm && <Form onSubmit={this.handleFormSubmit} /* Show form only after button clicked */>
-                                        <Form.Group controlId="updatePassword">
-                                            <Form.Label>New password:</Form.Label>
-                                            <Form.Control
-                                                type="password"
-                                                onChange={(event) => this.handleUpdatePassword(event)}
-                                                placeholder="Enter your new password"
-                                            />
-                                        </Form.Group>
-                                    </Form>}
-                                    <Button
-                                        variant="primary"
-                                        block
-                                        id="profileButton"
-                                        onClick={this.handleLogout}
-                                    >
-                                        <Link to="/login" className="buttonText">
-                                            Log out
+                                        {showPasswordForm && <Form onSubmit={this.handleFormSubmit} /* Show form only after button clicked */>
+                                            <Form.Group controlId="updatePassword">
+                                                <Form.Label>New password:</Form.Label>
+                                                <Form.Control
+                                                    type="password"
+                                                    onChange={(event) => this.handleUpdatePassword(event)}
+                                                    placeholder="Enter your new password"
+                                                />
+                                            </Form.Group>
+                                        </Form>}
+                                        <Button
+                                            variant="primary"
+                                            block
+                                            id="profileButton"
+                                            onClick={this.handleLogout}
+                                        >
+                                            <Link to="/login" className="buttonText">
+                                                Log out! (Clicking my text will redirect you to login)
                                         </Link>
-                                    </Button>
-                                </div>}
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                    <Col className="postContainer" bsPrefix="postContainer">
-                        <div className="postContainer">
-                            {hasPosts && <h1> TODO make posts </h1>}
-                            {!hasPosts && <h1> no posts yet :( </h1>}
-                        </div>
-                    </Col>
-                </Row>
-            </Container>
+                                        </Button>
+                                    </div>}
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                        <Col className="postContainer" bsPrefix="postContainer">
+                            <div className="postContainer">
+                                {userPosts.length === 0 && <h1> User hasn't made any posts yet :( </h1>}
+                                {userPosts.length !== 0 &&
+                                    userPosts.map((post, index) => (
+                                        <div>
+                                            <Item_Info
+                                                img_link={post.photo ? post.photo : crackedEggert}
+                                                name={post.title}
+                                                descript={post.content ? post.content : "No description"}
+                                                price={post.price ? post.price : "Free"}
+                                                zip={post.location ? post.location : "Location unknown"}
+                                                email={post.email ? post.email : "eggert@ucla.edu"}
+                                            />
+                                            <hr className="postDivider" />
+                                        </div>
+                                    ))
+                                }
+                            </div>
+                        </Col>
+                    </Row>
+                </Container>
+            </div>
         );
     }
 }
