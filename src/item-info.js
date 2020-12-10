@@ -8,7 +8,7 @@ export default function Item_Info(props){
 
 	   
 	    <div style={{display: 'inline-block'}}>
-		<img src={props.img_link} alt='error' width='500'/>
+		<img src={props.img_link} alt='error' width='350'/>
 		 <h3>
 		 {props.name}</h3>
 		<p className='item-descript'><IoAlertCircleOutline/> <span style={{fontWeight: 'bold'}}> Description :</span> {props.descript}</p>

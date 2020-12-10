@@ -23,8 +23,8 @@ export default class Profile extends React.Component {
         this.state = {
             //Set up data: set name, etc from firebase + call choosephoto fx
             //const {viewerEmail, profileEmail} = this.props;
-            viewerEmail: "helen@gmail.com",
-            profileEmail: "helen@gmail.com",
+            viewerEmail: this.props.viewerEmail, // "hwang12@ucla.edu",
+            profileEmail: this.props.profileEmail, //"junho.choix10@gmail.com",
             sameUser: false, //Profile belongs to the user viewing
             name: null,
             photo: crackedEggert,
@@ -47,55 +47,33 @@ export default class Profile extends React.Component {
         const { viewerEmail, profileEmail } = this.state;
 
         //Get name, email, photo, and password info from accounts database
-        let userInfo = accountsApi.getUser(profileEmail);
-        userInfo = {
-            email: "helen@gmail.com",
-            name: "mr egg",
-            photo: "smallberg.jpg",
-            password: "123123123",
-        }
-
-        //Get user posts w/ posts query
-        let postInfo = [];
         postsApi.getPosts(profileEmail)
             .then((result) => (
-                //console.log("get users posts " + result.postList)
-                postInfo = result.postList
+                this.setState({ userPosts: result.postList.length > 0 ? result.postList : []})
             )).catch((err) => {
                 console.log(`Oh no! Get user posts ${err}`);
                 this.setState({ error: err });
             });
-        postInfo = [
-            {
-                author_email: "hubes@yahoo.com",
-                keyword: ["yay", "egg"],
-                photo: "eggert",
-                location: "nowhere",
-                content: "test post pls work",
-                price: "100",
-                title: "PLS WORK",
-            },
-            {
-                author_email: "hanna@yahoo.com",
-                keyword: ["yay", "egg"],
-                photo: "eggert",
-                location: "nowhere",
-                content: "my brain is big",
-                price: "10000",
-                title: "yayy",
-            }
-        ];
+
+        //Get user posts w/ posts query
+        accountsApi.getUser(profileEmail)
+            .then((result) => (
+                //console.log("get users posts " + result.postList)
+                this.setState({
+                    email: result.email,
+                    name: result.name,
+                    photo: result.photoID ? this.choosePhoto(result.photo) : crackedEggert,
+                    password: result.password
+                })
+            )).catch((err) => {
+                console.log(`Oh no! Get user info ${err}`);
+                this.setState({ error: err });
+            });
 
         this.setState({
             sameUser: viewerEmail === profileEmail,
-            email: userInfo.email,
-            name: userInfo.name,
-            photo: userInfo.photoID ? this.choosePhoto(userInfo.photo) : crackedEggert,
-            password: userInfo.password,
-            userPosts: postInfo,
+            goHome: false,
         });
-
-        this.setState({goHome: false});
     }
 
     //Set which profile image to display
@@ -146,7 +124,7 @@ export default class Profile extends React.Component {
 
     render() {
         const { name, photo, sameUser, viewerEmail, profileEmail, showPasswordForm, userPosts, error, goHome } = this.state;
-        if (goHome === true) {
+        if (goHome === true) { //If user clicks home button, this will redirect to home screen
             return (
                 <div>
                     <Switch>
@@ -156,7 +134,7 @@ export default class Profile extends React.Component {
             );
         }
 
-        return (
+        return ( //If not redirecting to Home, render the profile screen
             <div>
                 {error && ( //Alert box pops up if there is an error
                     <Alert variant="danger" onClose={() => this.setState({ error: !error })} dismissible>
@@ -184,7 +162,7 @@ export default class Profile extends React.Component {
                                 <Card.Body>
                                     <Card.Title id="title"> {name} </Card.Title>
                                     <ListGroup variant="flush">
-                                        <ListGroup.Item>@{name ? name : "Username unknown"}</ListGroup.Item>
+                                        <ListGroup.Item>Username: {name ? name : profileEmail}</ListGroup.Item>
                                         <ListGroup.Item>Email: {profileEmail ? profileEmail : "Email unknown"}</ListGroup.Item>
                                     </ListGroup>
                                     {sameUser && <div /* Only show update/log out buttons if user owns this profile */>
