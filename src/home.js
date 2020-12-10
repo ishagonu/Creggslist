@@ -44,7 +44,7 @@ export default class Home extends React.Component {
 			showModal: false, //show pop-up w/ more detailed info
 			itemID: 0,
 			homePosts: [],
-			searchCategory: null,
+			searchCategory: "Select by",
 			searchInput: "",
 		}
 		this.openItemInfo = this.openItemInfo.bind(this);
@@ -66,38 +66,40 @@ export default class Home extends React.Component {
 	searchForPosts() {
 		const { searchInput, searchCategory } = this.state;
 		console.log("search post");
-		postsApi.searchPosts(searchInput, searchCategory === "location" ? searchCategory : null )
+		postsApi.searchPosts(searchInput, searchCategory === "Location" ? searchCategory : null )
 			.then((result) => (
-				console.log("search posts " + result.postList)
-				//this.setState({ homePosts: foundPosts })
+				//console.log("search posts " + result.postList)
+				this.setState({ homePosts: result.postList })
 			)).catch((err) => {
 				console.log(`Oh no! Search posts ${err}`);
 				this.setState({ error: err });
 			});
 		
-		this.setState({ homePosts: examplePosts });
+		//this.setState({ homePosts: examplePosts });
 	}
 
 	//Get 50 most recent posts + stores in state to rerender w/o search filters
 	clearSearch() {
-		console.log("clear search");
-		postsApi.searchPosts("", null) // 1st param is search query, 2nd is location (zipcode)
+		postsApi.getAllPosts()
 		.then((result) => (
-			this.setState({ homePosts: result.postList })
+			//console.log("clear search and get all posts" + result.postList)
+			this.setState({ homePosts: result.postList === null ? [] : result.postList})
 		)).catch((err) => {
 			console.log(`Oh no! Clear search ${err}`);
 			this.setState({ error: err });
 		});
 
-		this.setState({ searchInput: "", searchCategory: null });
-		this.setState({homePosts: []}); //remove later!!
+		this.setState({ searchInput: "", searchCategory: "Select by" });
+		//this.setState({homePosts: []}); //remove later!!
 	}
 
 	//When home screen mounts, get information for all posts to display
 	componentDidMount() {
-		postsApi.searchPosts(" b", null) // 1st param is search query, 2nd is location (zipcode)
+		console.log("get all posts");
+		postsApi.getAllPosts()
 			.then((result) => (
-				this.setState({ homePosts: result.postList })
+				//console.log("get all posts" + result.postList)
+				this.setState({ homePosts: result.postList /*=== null ? [] : result.postList */})
 			)).catch((err) => {
 				console.log(`Oh no! Component mount ${err}`);
 				this.setState({ error: err });
@@ -118,14 +120,14 @@ export default class Home extends React.Component {
 				<div>
 					<Navbar className="searchHeader" bg="light">
 						<Navbar.Brand> Find posts </Navbar.Brand>
-						<NavDropdown title="Select by">
-							<NavDropdown.Item onClick={() => this.setState({ searchCategory: "keywords" })}>
+						<NavDropdown title={this.state.searchCategory}>
+							<NavDropdown.Item onClick={() => this.setState({ searchCategory: "Keywords" })}>
 								Keywords (default)
 						</NavDropdown.Item>
-							<NavDropdown.Item onClick={() => this.setState({ searchCategory: "title" })}>
+							<NavDropdown.Item onClick={() => this.setState({ searchCategory: "Title" })}>
 								Title
 						</NavDropdown.Item>
-							<NavDropdown.Item onClick={() => this.setState({ searchCategory: "location" })}>
+							<NavDropdown.Item onClick={() => this.setState({ searchCategory: "Location" })}>
 								Location (Zip code)
 						</NavDropdown.Item>
 						</NavDropdown>

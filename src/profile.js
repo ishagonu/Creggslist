@@ -49,7 +49,7 @@ export default class Profile extends React.Component {
         //Get name, email, photo, and password info from accounts database
         postsApi.getPosts(profileEmail)
             .then((result) => (
-                this.setState({ userPosts: result.postList.length > 0 ? result.postList : []})
+                this.setState({ userPosts: result.postList === null ? [] : result.postList})
             )).catch((err) => {
                 console.log(`Oh no! Get user posts ${err}`);
                 this.setState({ error: err });

@@ -119,8 +119,8 @@ const getAllPosts = async () => {
     .get(`/posts`)
     .then((res) => {
       return {
-        count: res.data.users.count,
-        postList: res.data.users.rows.map(function (posts) {
+        count: res.data.posts.count,
+        postList: res.data.posts.rows.map(function (posts) {
           return {
             author_email: posts.author_email,
             keywords: posts.keywords,
