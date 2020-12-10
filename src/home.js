@@ -3,6 +3,7 @@ import { Button, Navbar, NavDropdown, Form, FormControl, Row } from 'react-boots
 import { Route, Link, Switch } from 'react-router-dom';
 import ReactModal from 'react-modal';
 import { BsPeopleCircle } from "react-icons/bs";
+import { AiFillEdit } from "react-icons/ai";
 
 import Make_Post from './make-post.js';
 import Item_Info from './item-info.js';
@@ -12,16 +13,17 @@ import Profile from "./profile.js";
 
 export default class Home extends React.Component {
 	constructor() {
-		super()
-		this.state = {
-			viewerEmail: null, //get current user's email from props in componentdidmount
-			showModal: false, //show pop-up w/ more detailed info
-			itemID: 0,
-			homePosts: [],
-			searchCategory: "Select by",
-			searchInput: "",
-			gotoProfile: false,
-		}
+	    super()
+	    this.state = {
+		viewerEmail: null, //get current user's email from props in componentdidmount
+		showModal: false, //show pop-up w/ more detailed info
+		itemID: 0,
+		homePosts: [],
+		searchCategory: "Select by",
+		searchInput: "",
+		gotoProfile: false,
+		gotoPost:false,
+	    }
 		this.openItemInfo = this.openItemInfo.bind(this);
 		this.closeItemInfo = this.closeItemInfo.bind(this);
 		this.searchForPosts = this.searchForPosts.bind(this);
@@ -87,33 +89,44 @@ export default class Home extends React.Component {
 	}
 
 	render() {
-		const { homePosts, itemID, showModal, viewerEmail, gotoProfile } = this.state;
-		console.log("home email in render = " + viewerEmail);
+	    const { homePosts, itemID, showModal, viewerEmail, gotoProfile, gotoPost } = this.state;
+	    console.log("home email in render = " + viewerEmail);
 
-		if (gotoProfile === true) { //If user clicks home button, this will redirect to home screen
-            return (
-                <div>
-                    <Switch>
-                        <Route><Profile viewerEmail={viewerEmail} profileEmail={viewerEmail}/></Route>
-                    </Switch>
-                </div>
-            );
-        }
+	    if (gotoProfile === true) { //If user clicks home button, this will redirect to home screen
+		return (
+                    <div>
+			<Switch>
+                            <Route><Profile viewerEmail={viewerEmail} profileEmail={viewerEmail}/></Route>
+			</Switch>
+                    </div>
+		);
+            }else if (gotoPost === true){
+		return (
+		    <div>
+			<Switch>
+			    <Route><Make_Post viewerEmail={viewerEmail}/> </Route>
+			</Switch>
+		    </div>		    
+		    
+		);
+		
+	    }
 
 		return (
+		    <div>
 			<div>
-				<div>
-					<Row className="homeHeader">
-						<h2 className='text'>This is Home</h2>
-						<Button variant="light" className="profileButton" onClick={() => this.setState({gotoProfile: !gotoProfile})}>
-							<BsPeopleCircle className="profileIcon"/>
-							Profile
-						</Button>
-					</Row>
-				</div>
-				<p className='text'><Link to="/make-post" id="link">Make Post</Link></p>
-				<div>
-					<Navbar className="searchHeader" bg="light">
+			    <Row className="homeHeader">
+				<h2 className='text'>This is Home</h2>
+				<Button variant="light" className="profileButton" onClick={() => this.setState({gotoProfile: !gotoProfile})}>
+				    <BsPeopleCircle className="profileIcon"/>
+				    Profile
+				</Button>
+				<Button variant='light' className='profileButton' onClick={() => this.setState({gotoPost: !gotoPost})}><AiFillEdit/> Make Post</Button>
+			    </Row>
+			</div>
+			
+			<div>
+			    <Navbar className="searchHeader" bg="light">
 						<Navbar.Brand> Find posts </Navbar.Brand>
 						<NavDropdown title={this.state.searchCategory}>
 							<NavDropdown.Item onClick={() => this.setState({ searchCategory: "Keywords" })}>

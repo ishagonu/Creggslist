@@ -20,10 +20,12 @@ import PostsApi from './postsApi.js';
 
 // Placeholder Image
 import placeholder_img from './assets/placeholder.png'
+
+// Google Firebase Storage
 import {storage} from './firebase.js'
 
 
-export default function Make_Post(){
+export default function Make_Post(props){
     const [images, setImages] = React.useState([]);
     const maxNumber = 1;
  
@@ -146,9 +148,7 @@ export default function Make_Post(){
     async function makePost() {
 	if (!validInputs()){return}
 	const keys = keywords.split(',');
-	const email = 'junho.choix10@gmail.com'; // Change this
-	
-	await PostsApi.createPost(email, keys, imageAsUrl, zip, description, parseFloat(price), item_title).then(res => {
+	await PostsApi.createPost(props.viewerEmail, keys, imageAsUrl, zip, description, parseFloat(price), item_title).then(res => {
 		setRedirect(true)
 	    }).catch(err =>{
 		alert('Oh no! You got egged!')
@@ -159,7 +159,14 @@ export default function Make_Post(){
 					 
 					
     if (redirect) {
-	return <Redirect push to= '/home' />;
+	return(
+	    <div>
+		<Switch>
+		    <Route><Home email={props.viewerEmail}/></Route>
+		</Switch>
+	    </div>
+	)
+
     }else {
 	return (
 	    <div className='item_detail-container'>
