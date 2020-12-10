@@ -1,14 +1,18 @@
 import React from "react";
-import { Button, Navbar, NavDropdown, Form, FormControl } from 'react-bootstrap';
-import {Route, Link, Switch, useRouteMatch} from 'react-router-dom';
+import { Button, Navbar, NavDropdown, Form, FormControl, Row } from 'react-bootstrap';
+import { Route, Link, Switch } from 'react-router-dom';
 import ReactModal from 'react-modal';
+import { BsPeopleCircle } from "react-icons/bs";
+
 import Make_Post from './make-post.js';
 import Item_Info from './item-info.js';
+import postsApi from "./postsApi.js";
+import './home.css';
+import Profile from "./profile.js";
+
 import placeholder from './assets/placeholder.png';
 import banana from './assets/bananas.jpg';
 import bicycle from './assets/bicycle.png';
-import './home.css';
-import postsApi from "./postsApi.js";
 
 const examplePosts = [{
 	photo: banana,
@@ -46,6 +50,7 @@ export default class Home extends React.Component {
 			homePosts: [],
 			searchCategory: "Select by",
 			searchInput: "",
+			gotoProfile: false,
 		}
 		this.openItemInfo = this.openItemInfo.bind(this);
 		this.closeItemInfo = this.closeItemInfo.bind(this);
@@ -66,7 +71,7 @@ export default class Home extends React.Component {
 	searchForPosts() {
 		const { searchInput, searchCategory } = this.state;
 		console.log("search post");
-		postsApi.searchPosts(searchInput, searchCategory === "Location" ? searchCategory : null )
+		postsApi.searchPosts(searchInput, searchCategory === "Location" ? searchCategory : null)
 			.then((result) => (
 				//console.log("search posts " + result.postList)
 				this.setState({ homePosts: result.postList })
@@ -74,48 +79,68 @@ export default class Home extends React.Component {
 				console.log(`Oh no! Search posts ${err}`);
 				this.setState({ error: err });
 			});
-		
+
 		//this.setState({ homePosts: examplePosts });
 	}
 
 	//Get 50 most recent posts + stores in state to rerender w/o search filters
 	clearSearch() {
 		postsApi.getAllPosts()
-		.then((result) => (
-			//console.log("clear search and get all posts" + result.postList)
-			this.setState({ homePosts: result.postList === null ? [] : result.postList})
-		)).catch((err) => {
-			console.log(`Oh no! Clear search ${err}`);
-			this.setState({ error: err });
-		});
+			.then((result) => (
+				//console.log("clear search and get all posts" + result.postList)
+				this.setState({ homePosts: result.postList === null ? [] : result.postList })
+			)).catch((err) => {
+				console.log(`Oh no! Clear search ${err}`);
+				this.setState({ error: err });
+			});
 
 		this.setState({ searchInput: "", searchCategory: "Select by" });
-		//this.setState({homePosts: []}); //remove later!!
 	}
 
 	//When home screen mounts, get information for all posts to display
 	componentDidMount() {
-		console.log("get all posts");
+		//console.log("get all posts");
 		postsApi.getAllPosts()
 			.then((result) => (
 				//console.log("get all posts" + result.postList)
-				this.setState({ homePosts: result.postList /*=== null ? [] : result.postList */})
+				this.setState({ homePosts: result.postList === null ? [] : result.postList })
 			)).catch((err) => {
 				console.log(`Oh no! Component mount ${err}`);
 				this.setState({ error: err });
 			});
 
-		this.setState({viewerEmail: this.props.email});
+		this.setState({ 
+			viewerEmail: this.props.email, 
+			gotoProfile: false 
+		});
 		//this.setState({ homePosts: examplePosts });
 	}
 
 	render() {
-		const { homePosts, itemID, showModal, viewerEmail } = this.state;
+		const { homePosts, itemID, showModal, viewerEmail, gotoProfile } = this.state;
 		console.log("home email in render = " + viewerEmail);
+
+		if (gotoProfile === true) { //If user clicks home button, this will redirect to home screen
+            return (
+                <div>
+                    <Switch>
+                        <Route><Profile viewerEmail={viewerEmail} profileEmail={viewerEmail}/></Route>
+                    </Switch>
+                </div>
+            );
+        }
 
 		return (
 			<div>
-				<p className='text'>This is Home</p>
+				<div>
+					<Row className="homeHeader">
+						<h2 className='text'>This is Home</h2>
+						<Button variant="light" className="profileButton" onClick={() => this.setState({gotoProfile: !gotoProfile})}>
+							<BsPeopleCircle className="profileIcon"/>
+							Profile
+						</Button>
+					</Row>
+				</div>
 				<p className='text'><Link to="/make-post" id="link">Make Post</Link></p>
 				<div>
 					<Navbar className="searchHeader" bg="light">

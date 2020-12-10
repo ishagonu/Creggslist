@@ -33,11 +33,28 @@
     border-radius: 2%;
   }
 
+  .homeHeader { /* For home page title and icon */
+    width: 80%;
+    padding-left: 40%;
+}
+
+  .profileButton {
+    margin-left: 5%;
+    height: 10%;
+    width: 25%;
+  }
+
+  .profileIcon {
+    margin-bottom: 5%;
+    margin-right: 7%;
+  }
+
   .item-list{
-    margin: 1% 2% 1% 2%;
+    margin: 1% 20% 1% 2%;
+    padding-left: 8%;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    grid-gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    grid-gap: 30px;
     grid-auto-rows: 200px;
   }
   .item-list img {
