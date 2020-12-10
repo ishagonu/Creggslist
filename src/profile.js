@@ -11,18 +11,13 @@ import Item_Info from "./item-info.js";
 import "./profile.css";
 
 //import images from local
-import eggert from './assets/eggert.jpg'
-import smallberg from './assets/smallberg.jpg'
-import nachenberg from './assets/nachenberg.jpg'
-import reinman from './assets/reinman.jpg'
 import crackedEggert from "./assets/cracked_eggert.png";
 
 export default class Profile extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            //Set up data: set name, etc from firebase + call choosephoto fx
-            //const {viewerEmail, profileEmail} = this.props;
+            //Set up data: set name, etc from firebase fx
             viewerEmail: this.props.viewerEmail, // "hwang12@ucla.edu",
             profileEmail: this.props.profileEmail, //"junho.choix10@gmail.com",
             sameUser: false, //Profile belongs to the user viewing
@@ -36,7 +31,6 @@ export default class Profile extends React.Component {
         };
 
         //Bind functions just in case
-        this.choosePhoto = this.choosePhoto.bind(this);
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
         this.handleLogout = this.handleLogout.bind(this);
         this.handleUpdatePassword = this.handleUpdatePassword.bind(this);
@@ -62,7 +56,7 @@ export default class Profile extends React.Component {
                 this.setState({
                     email: result.email,
                     name: result.name,
-                    photo: result.photoID ? this.choosePhoto(result.photo) : crackedEggert,
+                    photo: result.photo ? result.photo : crackedEggert,
                     password: result.password
                 })
             )).catch((err) => {
@@ -74,21 +68,6 @@ export default class Profile extends React.Component {
             sameUser: viewerEmail === profileEmail,
             goHome: false,
         });
-    }
-
-    //Set which profile image to display
-    choosePhoto(photoID) {
-        if (photoID.includes("eggert")) {
-            return eggert;
-        } else if (photoID.includes("smallberg")) {
-            return smallberg;
-        } else if (photoID.includes("nachenberg")) {
-            return nachenberg;
-        } else if (photoID.includes("reinman")) {
-            return reinman;
-        } else {
-            return crackedEggert;
-        }
     }
 
     //Handle when the update password form is submitted + call update password fx to store new pw in Firebase
