@@ -120,9 +120,9 @@ const searchPosts = async (req, res) => {
     })
     return res.status(200).json({ users })
   }
-  } catch (error) {
-  return res.status(500).send(error.message)
-}
+  catch (error) {
+    return res.status(500).send(error.message)
+  }
 }
 
 module.exports = {
