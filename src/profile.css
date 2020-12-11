@@ -4,12 +4,23 @@
         justify-content: "space-between";
     }
 
-    #postContainer {
+    .postContainer {
         margin: 5%;
+        margin-top: 3%;
+        width: 35%;
+        background-color: white;
+        padding: 2%;
+        border-radius: 1%;
+    }
+  
+    .postDivider {
+        margin: 25% 0% 15%;
+        border-top: 2px solid darkgray;
+        width: 210%;
     }
 
     #profileContainer { /* Overall profile card, contaiing photo, info, and buttons */
-        margin: 3% 3% 1% 3%; /* top right bottom left */
+        margin: 3% 5% 1% 5%; /* top right bottom left */
         width: 42%;
     }
 
@@ -45,11 +56,26 @@
         text-align: center;
     }
 
+    .profileHeader { /* For profile page title and home button */
+        width: 80%;
+        padding-left: 35%;
+        padding: auto;
+    }
+
     .smallerHeaderText { /* White header text */
         font-family: Neucha;
         color: white;
         text-align: center;
         font-size: xx-large;
+    }
+
+    .homeButton {
+        margin-left: 5%;
+    }
+
+    .homeIcon {
+        margin-bottom: 5px;
+        margin-right: 5px;
     }
 
     .bodyText { /* White body text */

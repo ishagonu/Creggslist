@@ -55,6 +55,7 @@
   },
   "devDependencies": {
     "axios": "^0.21.0",
+    "pg-hstore": "^2.3.3",
     "react-icons": "^4.1.0"
   }
 }
