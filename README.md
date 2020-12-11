@@ -1,9 +1,8 @@
 # Creggslist
 
-A simple marketplace for all things needed.
-Creggslist enables you to create an account, \
-find posts, create posts, and view posts that \
-you create!
+A simple marketplace for all things needed. \
+Creggslist enables you to create an account,
+find posts, create posts, and view posts that you create!
 
 ## Setting up Creggslist
 
@@ -20,6 +19,6 @@ The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
 ## Tech Stack
-Creggslist uses Firebase Cloud Storage to upload all photos.
-All accounts and posts are deployed in a PostgreSQL database, \
+Creggslist uses Firebase Cloud Storage to upload all photos. \
+All accounts and posts are deployed in a PostgreSQL database,
 which is hosted remotely on Heroku.
