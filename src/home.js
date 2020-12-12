@@ -146,6 +146,14 @@ export default class Home extends React.Component {
 								className="mr-sm-2"
 								//Stores user's search query in state
 								onChange={(event) => this.setState({ searchInput: event.target.value })}
+								onKeyDown={
+									(e) => {
+									  if (e.key === 'Enter') {
+										e.preventDefault();
+										this.searchForPosts();
+									  }
+									}
+								  }
 							/>
 							<Button
 								variant="outline-primary"
