@@ -41,16 +41,9 @@ export default class Home extends React.Component {
 
 	//Searches for posts if user uses nav bar, gets new information + stores it in state to rerender
 	searchForPosts() {
-		const { searchInput, searchCategory } = this.state;
+		const { searchInput} = this.state;
 		console.log("search post");
-
-		var input = searchInput;
-
-		if(searchCategory === "Location")
-		{
-			input = "";
-		}
-		postsApi.searchPosts(input, searchCategory === "Location" ? searchInput : null)
+		postsApi.searchPosts(searchInput)
 			.then((result) => (
 				//console.log("search posts " + result.postList)
 				this.setState({ homePosts: result.postList })
@@ -153,6 +146,14 @@ export default class Home extends React.Component {
 								className="mr-sm-2"
 								//Stores user's search query in state
 								onChange={(event) => this.setState({ searchInput: event.target.value })}
+								onKeyDown={
+									(e) => {
+									  if (e.key === 'Enter') {
+										e.preventDefault();
+										this.searchForPosts();
+									  }
+									}
+								  }
 							/>
 							<Button
 								variant="outline-primary"

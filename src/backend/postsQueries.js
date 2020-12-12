@@ -96,56 +96,31 @@ const updatePost = async (req, res) => {
 const searchPosts = async (req, res) => {
   try {
     const text = req.params.text
-    if (req.body.params.location) {
-      const users = await Posts.findAndCountAll({
-        limit: 50,
-        where: {
-          [Op.and]: [{
-            [Op.or]: [
-              {
-                title: { [Op.iLike]: `%${text}%` }
-              },
-              {
-                keywords: { [Op.contains]: [text] }
-              }
-            ]
+    const users = await Posts.findAndCountAll({
+      limit: 50,
+      where: {
+        [Op.or]: [
+          {
+            title: { [Op.iLike]: `%${text}%` }
           },
           {
-            location: req.body.params.location
+            keywords: { [Op.contains]: [text] }
           },
-          ]
+          {
+            location: text
+          }
+        ]
+      },
+      include: [
+        {
+          model: Accounts,
+          attributes: attributes
         },
-        include: [
-          {
-            model: Accounts,
-            attributes: attributes
-          },
-        ],
-      })
-      return res.status(200).json({ users })
-    } else {
-      const users = await Posts.findAndCountAll({
-        limit: 50,
-        where: {
-          [Op.or]: [
-            {
-              title: { [Op.iLike]: `%${text}%` }
-            },
-            {
-              keywords: { [Op.contains]: [text] }
-            }
-          ]
-        },
-        include: [
-          {
-            model: Accounts,
-            attributes: attributes
-          },
-        ],
-      })
-      return res.status(200).json({ users })
-    }
-  } catch (error) {
+      ],
+    })
+    return res.status(200).json({ users })
+  }
+  catch (error) {
     return res.status(500).send(error.message)
   }
 }

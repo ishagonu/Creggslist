@@ -83,13 +83,9 @@ const removePost= async (postId) => {
 
 
 // gets first 50 posts by filters, keywords, or title starting with text input
-const searchPosts = async (text, location) => {
+const searchPosts = async (text) => {
   return postsApi
-    .post(`/posts/search/${text}`, {
-      params: {
-        location: location
-      }
-    })
+    .get(`/posts/search/${text}`)
     .then((res) => {
       return {
         count: res.data.users.count,
