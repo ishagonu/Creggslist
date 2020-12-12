@@ -62,7 +62,7 @@ export default function Make_Post(props){
 	}
     };
     async function setImgUrl(data_url){
-	await dataURLtoFile(data_url, 'file.img').then(file=>{
+	await dataURLtoFile(data_url, Date() + '.jpg').then(file=>{
 	    setImageAsFile(file)
 	
 	    handleFireBaseUpload(file)
@@ -266,7 +266,7 @@ export default function Make_Post(props){
 				zip={zip}
 				price={price}
 				keywords={keywords}
-				email='email'
+				email={props.viewerEmail}
 			    />
 			</ReactModal>
 			
