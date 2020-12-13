@@ -23,8 +23,8 @@ export default class Profile extends React.Component {
             sameUser: false, //Whether profile belongs to the user viewing
             name: null,
             photo: crackedEggert,
-            password: null,
             showPasswordForm: false,
+            password: null,
             userPosts: [], //post information for this user's posts
             error: null, //contains something to be displayed if there is an error
             goHome: false,
@@ -33,7 +33,6 @@ export default class Profile extends React.Component {
 
         //Bind functions to keep "this" context
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
-        this.handleUpdatePassword = this.handleUpdatePassword.bind(this);
     }
 
     //When profile screen mounts, set up data for the user profile (user's info and posts)
@@ -57,7 +56,6 @@ export default class Profile extends React.Component {
                     email: result.email,
                     name: result.name,
                     photo: result.photo ? result.photo : crackedEggert,
-                    password: result.password
                 })
             )).catch((err) => {
                 console.log(`Oh no! Get user info ${err}`);
@@ -66,30 +64,21 @@ export default class Profile extends React.Component {
 
         this.setState({
             sameUser: viewerEmail === profileEmail,
-            goHome: false, //Set goHome + gotoLogin to be false in case user returns to page after redirecting
+            goHome: false, //Set goHome + gotoLogin to be false in 
             gotoLogin: false,
         });
     }
 
     //Handle when the update password form is submitted + call update password fx to store new pw in Firebase
     async handleFormSubmit(event) {
-        const { showPasswordForm } = this.state;
         event.preventDefault(); //Prevent call of default handler
-        //console.log("handle form submit, new password: " + password);
-        this.setState({ showPasswordForm: !showPasswordForm }); //Reset boolean so update password button is shown again
-    }
-
-    //Should update password
-    async handleUpdatePassword(event) {
-        //console.log("user wants to update their password");
-        this.setState({ password: event.target.value });
-        const { profileEmail, password } = this.state;
-
+        const { profileEmail, password, showPasswordForm } = this.state;
         await accountsApi.updatePassword(password, profileEmail)
             .catch((err) => {
                 console.log(`Oh no! Password update error: ${err}`);
                 this.setState({ error: err });
             });
+        this.setState({ showPasswordForm: !showPasswordForm }); //Reset boolean so update password button is shown again
     }
 
     render() {
@@ -109,12 +98,11 @@ export default class Profile extends React.Component {
             return (
                 <div>
                     <Switch>
-                        <Route><Login /> </Route>
+                        <Route exact path="/login"><Login /> </Route>
                     </Switch>
                 </div>
             );
         }
-
 
         return ( //If not redirecting to Home, render the profile screen
             <div>
@@ -127,7 +115,6 @@ export default class Profile extends React.Component {
                     </Alert>
                 )}
                 <Container className="entireContainer" fluid>
-
                     <Row id="headerContainer" bsPrefix="headerContainer">
                         <Row className="profileHeader">
                             <h1 className="smallerHeaderText"> {name ? name : "Anonymous"}'s Profile Page </h1>
@@ -161,7 +148,7 @@ export default class Profile extends React.Component {
                                                 <Form.Label>New password:</Form.Label>
                                                 <Form.Control
                                                     type="password"
-                                                    onChange={(event) => this.handleUpdatePassword(event)}
+                                                    onChange={(event) => this.setState({ password: event.target.value })}
                                                     placeholder="Enter your new password"
                                                 />
                                             </Form.Group>
