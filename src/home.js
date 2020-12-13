@@ -1,7 +1,9 @@
 import React from "react";
 import { Button, Navbar, NavDropdown, Form, FormControl, Row } from 'react-bootstrap';
-import { Route, Link, Switch } from 'react-router-dom';
-import Modal from 'react-modal';
+
+import { Route, Switch } from 'react-router-dom';
+import ReactModal from 'react-modal';
+
 import { BsPeopleCircle } from "react-icons/bs";
 import { AiFillEdit, AiOutlineClose, AiOutlineSearch} from "react-icons/ai";
 
@@ -12,6 +14,7 @@ import './home.css';
 import Profile from "./profile.js";
 
 export default class Home extends React.Component {
+
     constructor() {
 	super()
 	this.state = {
@@ -31,6 +34,12 @@ export default class Home extends React.Component {
 		'25%'
 	    ]
 	}
+		this.openItemInfo = this.openItemInfo.bind(this);
+		this.closeItemInfo = this.closeItemInfo.bind(this);
+		this.searchForPosts = this.searchForPosts.bind(this);
+		this.clearSearch = this.clearSearch.bind(this);
+	}
+
 	this.openItemInfo = this.openItemInfo.bind(this);
 	this.closeItemInfo = this.closeItemInfo.bind(this);
 	this.searchForPosts = this.searchForPosts.bind(this);
@@ -41,25 +50,22 @@ export default class Home extends React.Component {
 
 	//Searches for posts if user uses nav bar, gets new information + stores it in state to rerender
 	searchForPosts() {
-		const { searchInput} = this.state;
+		const { searchInput } = this.state;
 		console.log("search post");
 		postsApi.searchPosts(searchInput)
 			.then((result) => (
-				//console.log("search posts " + result.postList)
 				this.setState({ homePosts: result.postList })
 			)).catch((err) => {
 				console.log(`Oh no! Search posts ${err}`);
 				this.setState({ error: err });
 			});
 
-		//this.setState({homePosts: examplePosts});
 	}
 
 	//Get 50 most recent posts + stores in state to rerender w/o search filters
 	clearSearch() {
 		postsApi.getAllPosts()
 			.then((result) => (
-				//console.log("clear search and get all posts" + result.postList)
 				this.setState({ homePosts: result.postList === null ? [] : result.postList })
 			)).catch((err) => {
 				console.log(`Oh no! Clear search ${err}`);
@@ -71,21 +77,18 @@ export default class Home extends React.Component {
 
 	//When home screen mounts, get information for all posts to display
 	componentDidMount() {
-		//console.log("get all posts");
 		postsApi.getAllPosts()
 			.then((result) => (
-				//console.log("get all posts" + result.postList)
 				this.setState({ homePosts: result.postList === null ? [] : result.postList })
 			)).catch((err) => {
 				console.log(`Oh no! Component mount ${err}`);
 				this.setState({ error: err });
 			});
 
-		this.setState({ 
-			viewerEmail: this.props.email, 
-			gotoProfile: false 
+		this.setState({
+			viewerEmail: this.props.email,
+			gotoProfile: false
 		});
-		//this.setState({ homePosts: examplePosts });
 	}
    
 
@@ -125,6 +128,7 @@ export default class Home extends React.Component {
     }
 
 	render() {
+
 	    const { homePosts, itemID, showItemModal, viewerEmail, gotoProfile, gotoPost, modalSetting} = this.state;
 	    
 	    const modalStyle = {
@@ -141,27 +145,27 @@ export default class Home extends React.Component {
 
 	    console.log("home email in render = " + viewerEmail);
 
-	    if (gotoProfile === true) { //If user clicks home button, this will redirect to home screen
-		return (
-                    <div>
-			<Switch>
-                            <Route><Profile viewerEmail={viewerEmail} profileEmail={viewerEmail}/></Route>
-			</Switch>
-                    </div>
-		);
-            }else if (gotoPost === true){
-		return (
-		    <div>
-			<Switch>
-			    <Route><Make_Post viewerEmail={viewerEmail}/> </Route>
-			</Switch>
-		    </div>		    
-		    
-		);
-		
-	    }
+
+		if (gotoProfile === true) { //If user clicks home button, this will redirect to home screen
+			return (
+				<div>
+					<Switch>
+						<Route><Profile viewerEmail={viewerEmail} profileEmail={viewerEmail} /></Route>
+					</Switch>
+				</div>
+			);
+		} else if (gotoPost === true) {
+			return (
+				<div>
+					<Switch>
+						<Route><Make_Post viewerEmail={viewerEmail} /> </Route>
+					</Switch>
+				</div>
+			);
+		}
 
 		return (
+
 		    <div>
 			<div>
 			    <h2 className='text'>Home</h2>			

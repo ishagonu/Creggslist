@@ -10,7 +10,7 @@ import postsApi from './postsapi.js';
 import Item_Info from "./item-info.js";
 import "./profile.css";
 
-//import images from local
+//import default image from local
 import crackedEggert from "./assets/cracked_eggert.png";
 
 export default class Profile extends React.Component {
@@ -20,20 +20,19 @@ export default class Profile extends React.Component {
             //Set up data: set name, etc from firebase fx
             viewerEmail: this.props.viewerEmail, // "hwang12@ucla.edu",
             profileEmail: this.props.profileEmail, //"junho.choix10@gmail.com",
-            sameUser: false, //Profile belongs to the user viewing
+            sameUser: false, //Whether profile belongs to the user viewing
             name: null,
             photo: crackedEggert,
-            password: null,
             showPasswordForm: false,
+            password: null,
             userPosts: [], //post information for this user's posts
             error: null, //contains something to be displayed if there is an error
             goHome: false,
+            gotoLogin: false,
         };
 
-        //Bind functions just in case
+        //Bind functions to keep "this" context
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
-        this.handleLogout = this.handleLogout.bind(this);
-        this.handleUpdatePassword = this.handleUpdatePassword.bind(this);
     }
 
     //When profile screen mounts, set up data for the user profile (user's info and posts)
@@ -43,7 +42,7 @@ export default class Profile extends React.Component {
         //Get name, email, photo, and password info from accounts database
         postsApi.getPosts(profileEmail)
             .then((result) => (
-                this.setState({ userPosts: result.postList === null ? [] : result.postList})
+                this.setState({ userPosts: result.postList === null ? [] : result.postList })
             )).catch((err) => {
                 console.log(`Oh no! Get user posts ${err}`);
                 this.setState({ error: err });
@@ -57,7 +56,6 @@ export default class Profile extends React.Component {
                     email: result.email,
                     name: result.name,
                     photo: result.photo ? result.photo : crackedEggert,
-                    password: result.password
                 })
             )).catch((err) => {
                 console.log(`Oh no! Get user info ${err}`);
@@ -66,48 +64,41 @@ export default class Profile extends React.Component {
 
         this.setState({
             sameUser: viewerEmail === profileEmail,
-            goHome: false,
+            goHome: false, //Set goHome + gotoLogin to be false in 
+            gotoLogin: false,
         });
     }
 
     //Handle when the update password form is submitted + call update password fx to store new pw in Firebase
     async handleFormSubmit(event) {
-        const { showPasswordForm } = this.state;
         event.preventDefault(); //Prevent call of default handler
-        //console.log("handle form submit, new password: " + password);
-        this.setState({ showPasswordForm: !showPasswordForm }); //Reset boolean so update password button is shown again
-    }
-
-    //Should update password
-    async handleUpdatePassword(event) {
-        //console.log("user wants to update their password");
-        this.setState({ password: event.target.value });
-        const { profileEmail, password } = this.state;
-
+        const { profileEmail, password, showPasswordForm } = this.state;
         await accountsApi.updatePassword(password, profileEmail)
             .catch((err) => {
                 console.log(`Oh no! Password update error: ${err}`);
                 this.setState({ error: err });
             });
-    }
-
-    //Redirects to login page upon logout
-    handleLogout() {
-        //console.log("user wants to log out");
-        return (
-            <Switch>
-                <Route exact path='/login' component={Login} />
-            </Switch>
-        );
+        this.setState({ showPasswordForm: !showPasswordForm }); //Reset boolean so update password button is shown again
     }
 
     render() {
-        const { name, photo, sameUser, viewerEmail, profileEmail, showPasswordForm, userPosts, error, goHome } = this.state;
+        const { name, photo, sameUser, viewerEmail, profileEmail,
+            showPasswordForm, userPosts, error, goHome, gotoLogin } = this.state;
+
         if (goHome === true) { //If user clicks home button, this will redirect to home screen
             return (
                 <div>
                     <Switch>
                         <Route><Home email={viewerEmail}/></Route>
+                    </Switch>
+                </div>
+            );
+        }
+        if (gotoLogin === true) { //If user has clicked logout button, redirect to login screen
+            return (
+                <div>
+                    <Switch>
+                        <Route exact path="/login"><Login /> </Route>
                     </Switch>
                 </div>
             );
@@ -124,7 +115,6 @@ export default class Profile extends React.Component {
                     </Alert>
                 )}
                 <Container className="entireContainer" fluid>
-
                     <Row id="headerContainer" bsPrefix="headerContainer">
                         <Row className="profileHeader">
                             <h1 className="smallerHeaderText"> {name ? name : "Anonymous"}'s Profile Page </h1>&nbsp;
@@ -160,7 +150,7 @@ export default class Profile extends React.Component {
                                                 <Form.Label>New password:</Form.Label>
                                                 <Form.Control
                                                     type="password"
-                                                    onChange={(event) => this.handleUpdatePassword(event)}
+                                                    onChange={(event) => this.setState({ password: event.target.value })}
                                                     placeholder="Enter your new password"
                                                 />
                                             </Form.Group>
@@ -169,11 +159,9 @@ export default class Profile extends React.Component {
                                             variant="primary"
                                             block
                                             id="profileButton"
-                                            onClick={this.handleLogout}
+                                            onClick={() => this.setState({ gotoLogin: !gotoLogin })}
                                         >
-                                            <Link to="/login" className="buttonText">
-                                                Log out! (Clicking my text will redirect you to login)
-                                        </Link>
+                                            Log out!
                                         </Button>
                                     </div>}
                                 </Card.Body>
