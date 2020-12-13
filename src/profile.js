@@ -6,7 +6,7 @@ import { AiOutlineHome } from "react-icons/ai"
 import Login from "./login.js"
 import Home from './home.js'
 import accountsApi from "./accountsApi.js";
-import postsApi from './postsApi.js';
+import postsApi from './postsapi.js';
 import Item_Info from "./item-info.js";
 import "./profile.css";
 
@@ -89,7 +89,7 @@ export default class Profile extends React.Component {
             return (
                 <div>
                     <Switch>
-                        <Route><Home email={viewerEmail} /></Route>
+                        <Route><Home email={viewerEmail}/></Route>
                     </Switch>
                 </div>
             );
@@ -117,16 +117,18 @@ export default class Profile extends React.Component {
                 <Container className="entireContainer" fluid>
                     <Row id="headerContainer" bsPrefix="headerContainer">
                         <Row className="profileHeader">
-                            <h1 className="smallerHeaderText"> {name ? name : "Anonymous"}'s Profile Page </h1>
-                            <Button variant="light" className="homeButton" onClick={() => this.setState({ goHome: !goHome })}>
-                                <AiOutlineHome className="homeIcon" />
-                                Home
-                            </Button>
-                        </Row>
-                    </Row>
-                    <Row>
-                        <Col /*bsPrefix overrides for custom CSS */ id="profileContainer" bsPrefix="profileContainer">
-                            <Card className="bodyText">
+                            <h1 className="smallerHeaderText"> {name ? name : "Anonymous"}'s Profile Page </h1>&nbsp;
+				  <button className='homeButton btn btn-outline-info' style={{width:'100%'}} style={sameUser ? null : {display:'none'}} onClick={() => this.setState({ goHome: !goHome })}>
+                                    <AiOutlineHome className="homeIcon" /> Home
+					</button>
+				</Row>
+			
+				</Row>
+				
+
+				<Row>
+				    <Col /*bsPrefix overrides for custom CSS */ id="profileContainer" bsPrefix="profileContainer">
+					   <Card className="bodyText">
                                 <Card.Img variant="top" id="profilePhoto" src={photo} />
                                 <Card.Body>
                                     <Card.Title id="title"> {name} </Card.Title>
@@ -177,7 +179,9 @@ export default class Profile extends React.Component {
                                                 descript={post.content ? post.content : "No description"}
                                                 price={post.price ? post.price : "Free"}
                                                 zip={post.location ? post.location : "Location unknown"}
+
                                                 email={post.author_email ? post.author_email : "eggert@ucla.edu"}
+						from='profile'
                                             />
                                             <hr className="postDivider" />
                                         </div>
