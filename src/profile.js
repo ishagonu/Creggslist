@@ -10,7 +10,7 @@ import postsApi from './postsApi.js';
 import Item_Info from "./item-info.js";
 import "./profile.css";
 
-//import images from local
+//import default image from local
 import crackedEggert from "./assets/cracked_eggert.png";
 
 export default class Profile extends React.Component {
@@ -20,7 +20,7 @@ export default class Profile extends React.Component {
             //Set up data: set name, etc from firebase fx
             viewerEmail: this.props.viewerEmail, // "hwang12@ucla.edu",
             profileEmail: this.props.profileEmail, //"junho.choix10@gmail.com",
-            sameUser: false, //Profile belongs to the user viewing
+            sameUser: false, //Whether profile belongs to the user viewing
             name: null,
             photo: crackedEggert,
             password: null,
@@ -28,11 +28,11 @@ export default class Profile extends React.Component {
             userPosts: [], //post information for this user's posts
             error: null, //contains something to be displayed if there is an error
             goHome: false,
+            gotoLogin: false,
         };
 
-        //Bind functions just in case
+        //Bind functions to keep "this" context
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
-        this.handleLogout = this.handleLogout.bind(this);
         this.handleUpdatePassword = this.handleUpdatePassword.bind(this);
     }
 
@@ -43,7 +43,7 @@ export default class Profile extends React.Component {
         //Get name, email, photo, and password info from accounts database
         postsApi.getPosts(profileEmail)
             .then((result) => (
-                this.setState({ userPosts: result.postList === null ? [] : result.postList})
+                this.setState({ userPosts: result.postList === null ? [] : result.postList })
             )).catch((err) => {
                 console.log(`Oh no! Get user posts ${err}`);
                 this.setState({ error: err });
@@ -66,7 +66,8 @@ export default class Profile extends React.Component {
 
         this.setState({
             sameUser: viewerEmail === profileEmail,
-            goHome: false,
+            goHome: false, //Set goHome + gotoLogin to be false in case user returns to page after redirecting
+            gotoLogin: false,
         });
     }
 
@@ -91,18 +92,10 @@ export default class Profile extends React.Component {
             });
     }
 
-    //Redirects to login page upon logout
-    handleLogout() {
-        //console.log("user wants to log out");
-        return (
-            <Switch>
-                <Route exact path='/login' component={Login} />
-            </Switch>
-        );
-    }
-
     render() {
-        const { name, photo, sameUser, viewerEmail, profileEmail, showPasswordForm, userPosts, error, goHome } = this.state;
+        const { name, photo, sameUser, viewerEmail, profileEmail,
+            showPasswordForm, userPosts, error, goHome, gotoLogin } = this.state;
+
         if (goHome === true) { //If user clicks home button, this will redirect to home screen
             return (
                 <div>
@@ -112,6 +105,16 @@ export default class Profile extends React.Component {
                 </div>
             );
         }
+        if (gotoLogin === true) { //If user has clicked logout button, redirect to login screen
+            return (
+                <div>
+                    <Switch>
+                        <Route><Login /> </Route>
+                    </Switch>
+                </div>
+            );
+        }
+
 
         return ( //If not redirecting to Home, render the profile screen
             <div>
@@ -167,11 +170,9 @@ export default class Profile extends React.Component {
                                             variant="primary"
                                             block
                                             id="profileButton"
-                                            onClick={this.handleLogout}
+                                            onClick={() => this.setState({ gotoLogin: !gotoLogin })}
                                         >
-                                            <Link to="/login" className="buttonText">
-                                                Log out! (Clicking my text will redirect you to login)
-                                        </Link>
+                                            Log out!
                                         </Button>
                                     </div>}
                                 </Card.Body>
