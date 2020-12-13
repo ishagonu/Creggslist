@@ -108,7 +108,6 @@ export default function Item_Info(props){
 	    errorMessage = [];
 	    return false;
 	}else{
-	    alert('test')
 	    return true;
 	}
     }
@@ -127,7 +126,7 @@ export default function Item_Info(props){
 	if(zip !== ''){
 	    newContent.location =  zip
 	}
-	alert(JSON.stringify(newContent))
+
 	return newContent
 
     }
