@@ -6,7 +6,7 @@ import { AiOutlineHome } from "react-icons/ai"
 import Login from "./login.js"
 import Home from './home.js'
 import accountsApi from "./accountsApi.js";
-import postsApi from './postsapi.js';
+import postsApi from './postsApi.js';
 import Item_Info from "./item-info.js";
 import "./profile.css";
 

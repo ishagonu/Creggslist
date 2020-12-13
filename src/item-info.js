@@ -11,7 +11,7 @@ import {BiMoney} from 'react-icons/bi';
 import {BsPeopleCircle, BsPencil} from 'react-icons/bs'
 
 import Profile from "./profile.js"
-import PostsApi from './postsapi.js'
+import PostsApi from './postsApi.js'
 
 export default function Item_Info(props){
     const [showProfile, setShowProfile] = React.useState(false);

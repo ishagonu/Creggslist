@@ -2,19 +2,18 @@ import React from "react";
 import { Button, Navbar, NavDropdown, Form, FormControl, Row } from 'react-bootstrap';
 
 import { Route, Switch } from 'react-router-dom';
-import ReactModal from 'react-modal';
+import Modal from 'react-modal';
 
 import { BsPeopleCircle } from "react-icons/bs";
 import { AiFillEdit, AiOutlineClose, AiOutlineSearch} from "react-icons/ai";
 
 import Make_Post from './make-post.js';
 import Item_Info from './item-info.js';
-import postsApi from "./postsapi.js";
+import postsApi from "./postsApi.js";
 import './home.css';
 import Profile from "./profile.js";
 
 export default class Home extends React.Component {
-
     constructor() {
 	super()
 	this.state = {
@@ -34,11 +33,7 @@ export default class Home extends React.Component {
 		'25%'
 	    ]
 	}
-		this.openItemInfo = this.openItemInfo.bind(this);
-		this.closeItemInfo = this.closeItemInfo.bind(this);
-		this.searchForPosts = this.searchForPosts.bind(this);
-		this.clearSearch = this.clearSearch.bind(this);
-	}
+	
 
 	this.openItemInfo = this.openItemInfo.bind(this);
 	this.closeItemInfo = this.closeItemInfo.bind(this);
