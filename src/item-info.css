@@ -15,9 +15,18 @@
     }
 
     .item-info_profile-view{
-	color: white;
+	color: black;
+	width: 100%;
     }
     .item-info_item-view {
-	color: black;
+	color: white;
+    }
+
+    .verticalLine{
+	border-left: 2px solid #ffffff;
+	width: 100%;
+	height: 100%;
+	margin-left: 10%;
+
     }
 }
