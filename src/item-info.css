@@ -1,0 +1,23 @@
+@media all and (min-width: 480px) {
+    html,
+    body,
+    body > div,
+    .app{
+	background-color: rgb(181, 194, 236);
+	justify-content: center;
+	alight-content:center;
+    }
+
+    .toProfileButton{
+	outline: none;
+	background-color: transparent;
+	border: none;
+    }
+
+    .item-info_profile-view{
+	color: white;
+    }
+    .item-info_item-view {
+	color: black;
+    }
+}

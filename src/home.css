@@ -61,14 +61,7 @@
   .item-list img {
       width: 250px;
   }
-  .item-info-modal {
-    width: 50%;
-    height: 50%;
-    margin: 0;
-    padding: 0;
-    height: auto;
-    min-height: 100%;
-    border-radius: 0;
-  }
+
+
 
 }

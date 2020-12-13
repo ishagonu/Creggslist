@@ -253,10 +253,8 @@ export default function Make_Post(props){
 		<Button size='lg' class='btn' style={{width: '50%'}} disabled={!validateForm()} onClick={() => makePost()}> Post </Button>
 		<Button size='lg' class='btn' variant='light' style={{width: '50%'}} disabled={!validateForm()} onClick={() => handleOpenItemInfo()}> Preview </Button>
 		
-
-
 			</form>
-			<ReactModal isOpen={showPreview()}>
+			<ReactModal isOpen={showPreview()} style={{content : {backgroundColor: 'rgb(181, 194, 236)', borderRadius: '30px', right:'10%', left:' 10%'}}}>
 			    <Button onClick={()=>setItemPreview(false)}> Close </Button>
 			    <br/>
 			    <Item_Info
@@ -266,7 +264,10 @@ export default function Make_Post(props){
 				zip={zip}
 				price={price}
 				keywords={keywords}
+				
 				email={props.viewerEmail}
+				viewerEmail = {props.viewerEmail}
+				from= 'make-post'
 			    />
 			</ReactModal>
 			

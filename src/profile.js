@@ -128,7 +128,7 @@ export default class Profile extends React.Component {
                     <Row id="headerContainer" bsPrefix="headerContainer">
                         <Row className="profileHeader">
                             <h1 className="smallerHeaderText"> {name ? name : "Anonymous"}'s Profile Page </h1>
-                            <Button variant="light" className="homeButton" onClick={() => this.setState({ goHome: !goHome })}>
+				<Button variant="light" className="homeButton" style={sameUser ? null : {display:'none'}} onClick={() => this.setState({ goHome: !goHome })}>
                                 <AiOutlineHome className="homeIcon" />
                                 Home
                             </Button>
@@ -189,7 +189,9 @@ export default class Profile extends React.Component {
                                                 descript={post.content ? post.content : "No description"}
                                                 price={post.price ? post.price : "Free"}
                                                 zip={post.location ? post.location : "Location unknown"}
+
                                                 email={post.author_email ? post.author_email : "eggert@ucla.edu"}
+						from='profile'
                                             />
                                             <hr className="postDivider" />
                                         </div>

@@ -52,7 +52,7 @@ export default class Home extends React.Component {
 				this.setState({ error: err });
 			});
 
-		//this.setState({ homePosts: examplePosts });
+		//this.setState({homePosts: examplePosts});
 	}
 
 	//Get 50 most recent posts + stores in state to rerender w/o search filters
@@ -174,17 +174,21 @@ export default class Home extends React.Component {
 				})}
 
 				{showModal &&
-					<ReactModal isOpen={showModal} /* When the post image is clicked, pop-up opens up w/ item info */>
-						<Button onClick={this.closeItemInfo}> Close </Button>
-						<Item_Info
-							img_link={homePosts[itemID].photo ? homePosts[itemID].photo : "No photo"}
-							name={homePosts[itemID].title}
-							descript={homePosts[itemID].content}
-							zip={homePosts[itemID].location}
-							price={homePosts[itemID].price}
-							keywords={homePosts[itemID].keywords}
-							email={homePosts[itemID].author_email}
-						/>
+				 <ReactModal class='item-info-modal'  isOpen={showModal} style={{content : {backgroundColor: 'rgb(181, 194, 236)', borderRadius: '30px', right:'10%', left:' 10%'}}}>
+				     <Button onClick={this.closeItemInfo}> Close </Button>
+				     <Item_Info
+					 // item_id = {homePosts[itemID].
+					 img_link={homePosts[itemID].photo ? homePosts[itemID].photo : "No photo"}
+					 name={homePosts[itemID].title}							
+					 descript={homePosts[itemID].content}
+					 zip={homePosts[itemID].location}
+					 price={homePosts[itemID].price}
+					 keywords={homePosts[itemID].keywords}
+
+					 email={homePosts[itemID].author_email}
+					 viewerEmail = {viewerEmail}
+					 from='home'
+				     />
 					</ReactModal>
 				}
 
