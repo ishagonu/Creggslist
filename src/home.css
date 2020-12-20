@@ -24,13 +24,12 @@
  
   /*Styling for search bar title and drop down */
   .searchHeader {
-    margin-left: 10%;
-    margin-right: 10%;
-    margin-top: 2%;
-    margin-bottom: 2%;
-    width: 80%;
-    height: 10%;
-    border-radius: 2%;
+      background-color: rgb(181, 194, 236);
+      margin-left: -20px;
+      height: 20%;
+      width: 100%;
+      border-radius: 2%;
+
   }
 
   .homeHeader { /* For home page title and icon */
@@ -38,11 +37,6 @@
     padding-left: 40%;
 }
 
-  .profileButton {
-    margin-left: 5%;
-    height: 10%;
-    width: 25%;
-  }
 
   .profileIcon {
     margin-bottom: 5%;
@@ -50,25 +44,56 @@
   }
 
   .item-list{
-    margin: 1% 20% 1% 2%;
-    padding-left: 8%;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-    grid-gap: 30px;
-    grid-auto-rows: 200px;
+      display: grid;
+      grid-gap: 0px;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   }
 
-  .item-list img {
-      width: 250px;
+  .item-list img{
+      height: 200px;
+      object-fit: cover;
+      max-height: 100%;
+      background: white;
+      align: center;
+
   }
-  .item-info-modal {
-    width: 50%;
-    height: 50%;
-    margin: 0;
-    padding: 0;
-    height: auto;
-    min-height: 100%;
-    border-radius: 0;
+
+  .item-list button{
+      background-color: rgb(181, 194, 236);
+      border: none;
+
   }
+
+  .item-list .item{
+      position: relative;
+      overflow: hidden;
+  }
+
+  .item-list .item img{
+      vertical-align: middle;
+  }
+
+  .item-list .item-caption{
+      margin: 0;
+      padding: 1em;
+      position: absolute;
+      z-index: 1;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      max-height: 100%;
+      overflow: auto;
+      box-sizing: border-box;
+      transition: transform .5s;
+      transform: translateY(100%);
+      background: rgba(0, 0, 0, .7);
+      color: rgb(255, 255, 255);
+
+  }
+
+  .item-list .item:hover .item-caption{
+      transform: translateY(0%);
+  }
+
 
 }

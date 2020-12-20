@@ -90,16 +90,18 @@ const searchPosts = async (text) => {
       return {
         count: res.data.users.count,
         postList: res.data.users.rows.map(function (posts) {
-          return {
-            author_email: posts.author_email,
-            keywords: posts.keywords,
-            photo: posts.photo,
-            location: posts.location,
-            content: posts.content,
-            price: posts.price,
-            title: posts.title,
-            author_photo: posts.account.photo,
-            author_name: posts.account.name
+            return {
+		post_id : posts.id,
+		author_email: posts.author_email,
+		keywords: posts.keywords,
+		photo: posts.photo,
+		location: posts.location,
+		content: posts.content,
+		price: posts.price,
+		title: posts.title,
+		author_photo: posts.account.photo,
+		author_name: posts.account.name,
+		isUpdated: (posts.createdAt !== posts.updatedAt)
           }
         })
       }
@@ -114,21 +116,23 @@ const getAllPosts = async () => {
   return postsApi
     .get(`/posts`)
     .then((res) => {
-      return {
-        count: res.data.posts.count,
-        postList: res.data.posts.rows.map(function (posts) {
-          return {
-            author_email: posts.author_email,
-            keywords: posts.keywords,
-            photo: posts.photo,
-            location: posts.location,
-            content: posts.content,
-            price: posts.price,
-            title: posts.title,
-            author_photo: posts.account.photo,
-            author_name: posts.account.name
-          }
-        })
+	return {
+            count: res.data.posts.count,
+            postList: res.data.posts.rows.map(function (posts) {
+		return {
+		    post_id: posts.id,
+		    author_email: posts.author_email,
+		    keywords: posts.keywords,
+		    photo: posts.photo,
+		    location: posts.location,
+		    content: posts.content,
+		    price: posts.price,
+		    title: posts.title,
+		    author_photo: posts.account.photo,
+		    author_name: posts.account.name,
+		    isUpdated: (posts.createdAt !== posts.updatedAt)
+		}
+            })
       }
     })
     .catch((error) => {
