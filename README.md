@@ -13,7 +13,7 @@ find posts, create posts, and view posts that you create!
 ## To open Creggslist run `npm start`
 
 Please wait a minute for server to boot up upon
-logging in or signing up \
+logging in or signing up 
 
 Runs the app in the development mode.\
 Open [http://localhost:3000] to view it in the browser.
