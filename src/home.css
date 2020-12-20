@@ -52,7 +52,8 @@
   .item-list img{
       height: 200px;
       object-fit: cover;
-      max-height: 100%;
+
+
       background: white;
       align: center;
 
@@ -65,7 +66,7 @@
   }
 
   .item-list .item{
-      position: relative;
+
       overflow: hidden;
   }
 

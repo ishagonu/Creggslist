@@ -223,9 +223,9 @@ export default class Home extends React.Component {
 			 <div className='item-list'>
 				{homePosts.map((post, index) => {
 				    return (
-					<div className='item'>
+					<div className='item' style={homePosts.length === 1  ? {position:'absolute'} : {position:'relative'}}>
 					    <button onClick={this.openItemInfo} id={index}>
-						<img src={post.photo} id={index} alt='error' />
+						<img src={post.photo} id={index} alt='error'/>
 					    </button>
 					    <span class='item-caption'>{post.title} </span>
 					</div>
