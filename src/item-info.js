@@ -156,7 +156,7 @@ export default function Item_Info(props){
 	if(price[price.length - 1].length !== 2){
 	    return price.join('.') + '0'
 	}else{
-	    return price.join()
+	    return price.join('.')
 	}
     }
     if(showProfile){ // Redirect to profile page
